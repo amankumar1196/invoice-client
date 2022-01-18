@@ -1,21 +1,21 @@
 import apiHandler from "../../utils/apiCaller";
 import { qs } from "../../utils/helper";
 import {
-  CREATE_CLIENT,
-  RETRIEVE_CLIENTS,
-  GET_CLIENT,
-  UPDATE_CLIENT,
-  DELETE_CLIENT,
-  DELETE_ALL_CLIENTS
+  CREATE_COMPANY,
+  RETRIEVE_COMPANIES,
+  GET_COMPANY,
+  UPDATE_COMPANY,
+  DELETE_COMPANY,
+  DELETE_ALL_COMPANIES
 } from "./types";
 
 
-export const createClient = (data) => async (dispatch) => {
+export const createCompany = (data) => async (dispatch) => {
   try {
-    const res = await apiHandler.post("/v1/clients", data);
+    const res = await apiHandler.post("/v1/companies", data);
 
     dispatch({
-      type: CREATE_CLIENT,
+      type: CREATE_COMPANY,
       payload: res.data,
     });
 
@@ -25,15 +25,15 @@ export const createClient = (data) => async (dispatch) => {
   }
 };
 
-export const retrieveClients = (filter) => async (dispatch) => {
+export const retrieveCompanies = (filter) => async (dispatch) => {
   try {
-    let url = "/v1/clients" 
+    let url = "/v1/companies" 
     let qst = true ? qs({userId: 1}) : "";
     url = url +"?"+qst;
     const res = await apiHandler.get(url);
     
     dispatch({
-      type: RETRIEVE_CLIENTS,
+      type: RETRIEVE_COMPANIES,
       payload: res.data,
     });
   } catch (err) {
@@ -41,12 +41,12 @@ export const retrieveClients = (filter) => async (dispatch) => {
   }
 };
 
-export const getClient = (id) => async (dispatch) => {
+export const getCompany = (id) => async (dispatch) => {
   try {
-    let url = `/v1/clients/${id}` 
+    let url = `/v1/companies/${id}` 
     const res = await apiHandler.get(url);
     dispatch({
-      type: GET_CLIENT,
+      type: GET_COMPANY,
       payload: res.data,
     });
   } catch (err) {
@@ -54,12 +54,12 @@ export const getClient = (id) => async (dispatch) => {
   }
 };
 
-export const updateClient = (id, data) => async (dispatch) => {
+export const updateCompany = (id, data) => async (dispatch) => {
   try {
     const res = await apiHandler.put(`/tutorials/${id}`, data);
 
     dispatch({
-      type: UPDATE_CLIENT,
+      type: UPDATE_COMPANY,
       payload: data,
     });
 
@@ -69,12 +69,12 @@ export const updateClient = (id, data) => async (dispatch) => {
   }
 };
 
-export const deleteClient = (id) => async (dispatch) => {
-  debugger
+export const deleteCompany = (id) => async (dispatch) => {
   try {
-    const res = await apiHandler.delete(`/v1/clients/${id}`);
+    const res = await apiHandler.delete(`/v1/companies/${id}`);
+
     dispatch({
-      type: DELETE_CLIENT,
+      type: DELETE_COMPANY,
       payload: res.data,
     });
 
@@ -85,12 +85,12 @@ export const deleteClient = (id) => async (dispatch) => {
   }
 };
 
-export const deleteAllClients = () => async (dispatch) => {
+export const deleteAllCompanies = () => async (dispatch) => {
   try {
     const res = await apiHandler.delete(`/tutorials`);
 
     dispatch({
-      type: DELETE_ALL_CLIENTS,
+      type: DELETE_ALL_COMPANIES,
       payload: res.data,
     });
 
@@ -100,12 +100,12 @@ export const deleteAllClients = () => async (dispatch) => {
   }
 };
 
-export const findClientsByTitle = (title) => async (dispatch) => {
+export const findCompaniesByTitle = (title) => async (dispatch) => {
   try {
     const res = await apiHandler.get(`/tutorials?title=${title}`);
 
     dispatch({
-      type: RETRIEVE_CLIENTS,
+      type: RETRIEVE_COMPANIES,
       payload: res.data,
     });
   } catch (err) {

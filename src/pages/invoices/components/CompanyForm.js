@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 
 import { InputField, SelectField } from '../../../components/form';
 import countries from "../../../utils/countries";
-import { retrieveCompanies, getCompany, createCompany } from '../../../redux/actions/clientActions';
+import { retrieveCompanies, getCompany, createCompany } from '../../../redux/actions/companyActions';
 
 function CompanyForm(props) {
   const { globalFormValues, setGlobalFormValues, invoiceRef, activeSections, setActiveSections, companies, company} = props
@@ -55,7 +55,7 @@ function CompanyForm(props) {
           .required('Required'),
       })}
       onSubmit={(values, { setSubmitting }) => {
-        props.dispatch(createClient(values))
+        props.dispatch(createCompany(values))
         // setTimeout(() => {
         //   alert(JSON.stringify(values, null, 2));
         //   setSubmitting(false);
@@ -71,16 +71,16 @@ function CompanyForm(props) {
             <button type="button" class={`accordion ${!activeSections.company && "mb-16"}`}>
               <div class="d-flex align-items-center justify-content-between">
                 <p class="accordion-header d-flex align-items-center">
-                  <i class='bx bx-user-pin'></i>
-                  <span>Client Details</span>
+                  <i class='bx bx-calendar-edit'></i>
+                  <span>Company Details</span>
                 </p>
                 <div className="d-flex align-items-center">
                   <button className="btn btn-sm btn-outline-primary mr-16" type="submit">
-                    Add Client
+                    Create New
                   </button>
                   { companies.length > 0 && <div className="form-group w-100 pr-16 mb-0" style={{maxWidth: "10rem"}}>
                     <div class="input-field-wrapper">
-                      <select className="form-control" onChange={(e)=>props.dispatch(getClient(e.target.value))}>
+                      <select className="form-control" onChange={(e)=>props.dispatch(getCompany(e.target.value))}>
                         <option value=""></option>
                         {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                       </select>

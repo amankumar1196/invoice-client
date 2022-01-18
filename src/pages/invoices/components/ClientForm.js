@@ -76,7 +76,7 @@ function ClientForm(props) {
                 </p>
                 <div className="d-flex align-items-center">
                   <button className="btn btn-sm btn-outline-primary mr-16" type="submit">
-                    Add Client
+                    Create New
                   </button>
                   { clients.length > 0 && <div className="form-group w-100 pr-16 mb-0" style={{maxWidth: "10rem"}}>
                     <div class="input-field-wrapper">
@@ -93,7 +93,7 @@ function ClientForm(props) {
             <div class={`panel ${activeSections.client && "active"}`}>
               <div>
                 <InputField
-                  label="Company Name"
+                  label="Client Name"
                   name="name"
                   type="text"
                   placeholder=""

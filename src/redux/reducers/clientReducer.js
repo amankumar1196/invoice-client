@@ -38,7 +38,10 @@ function clientReducer(state = initialState, action) {
       });
 
     case DELETE_CLIENT:
-      return state.clients.filter(({ id }) => id !== payload.id);
+      return {
+        ...state,
+        clients: state.clients.filter(({ id }) => id !== payload.id)
+      };
 
     case DELETE_ALL_CLIENTS:
       return [];

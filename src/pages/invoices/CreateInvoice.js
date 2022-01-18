@@ -3,13 +3,11 @@ import {NavLink} from 'react-router-dom';
 import { connect } from "react-redux";
 import "./createInvoice.css";
 import {useRef, useState, useEffect} from "react"
-import { Formik, Form, FieldArray } from 'formik';
-import * as Yup from 'yup';
 
-import { InputField } from '../../components/form';
 import { createInvoice } from "../../redux/actions/invoiceActions"
 import InvoiceItemsForm from "./components/InvoiceItemForm";
 import ClientForm from "./components/ClientForm";
+import CompanyForm from "./components/CompanyForm";
 
 function CreateInvoice(props) {
 	const [isDrop, setDropState] = useState(false)
@@ -22,7 +20,8 @@ function CreateInvoice(props) {
 	const inputRef = useRef(null);
 	const invoiceItemsRef = useRef();
 	const clientRef = useRef();
-
+	const companyRef = useRef();
+	
 	const onDragOver = (e) => {
 		e.preventDefault();
 		setDropState(true);
@@ -159,107 +158,13 @@ function CreateInvoice(props) {
 					</div>
 
 					{/* Invoice sections Company */}
-					<button class={`accordion ${!activeSections.company && "mb-16"}`} onClick={()=> setActiveSections({...activeSections, company: !activeSections.company})}>
-						<div class="d-flex align-items-center justify-content-between">
-							<p class="accordion-header d-flex align-items-center">
-								<i class='bx bx-calendar-edit'></i>
-								<span>Company Details</span>
-							</p>
-							<p><i class={`bx fs-24 ${!activeSections.company ? "bx-chevron-right" : "bx-chevron-down"}`}></i></p>
-						</div>
-					</button>
-					<div class={`panel ${activeSections.company && "active"}`}>
-						<div>
-							<div class="form-group">
-								<label>Company Name</label>
-								<input type="text" class="form-control" placeholder="" />
-							</div>
-							<div class="d-flex w-100">
-								<div class="form-group w-100 pr-16">
-									<label>Email</label>
-									<input type="text" class="form-control" placeholder="" />
-								</div>
-								<div class="form-group w-100 pl-16">
-									<label>Phone</label>
-									<input type="text" class="form-control" placeholder="" />
-								</div>
-							</div>
-							<div class="d-flex w-100">
-								<div class="form-group w-100 pr-16">
-									<label>Address 1</label>
-									<input type="text" class="form-control" placeholder="" />
-								</div>
-								<div class="form-group w-100 pl-16">
-									<label>Address 2</label>
-									<input type="text" class="form-control" placeholder="" />
-								</div>
-							</div>
-							<div class="d-flex w-100">
-								<div class="form-group w-100 pr-16">
-									<label>Country</label>
-									<select class="form-control">
-										<option>1</option>
-										<option>2</option>
-										<option>3</option>
-										<option>4</option>
-										<option>5</option>
-									</select>
-								</div>
-								<div class="form-group w-100 pl-16">
-									<label>State</label>
-									<select class="form-control">
-										<option>1</option>
-										<option>2</option>
-										<option>3</option>
-										<option>4</option>
-										<option>5</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						{/* <div class="form-container">
-							<form onSubmit={handleSubmit}>
-								<h1>Login Form</h1>
-								<div className="ui divider"></div>
-								<div className="ui form">
-									<div className="field">
-										<label>Username</label>
-										<input
-											type="text"
-											name="username"
-											placeholder="Username"
-											value={formValues.username}
-											onChange={handleChange}
-										/>
-									</div>
-									<p>{formErrors.username}</p>
-									<div className="field">
-										<label>Email</label>
-										<input
-											type="text"
-											name="email"
-											placeholder="Email"
-											value={formValues.email}
-											onChange={handleChange}
-										/>
-									</div>
-									<p>{formErrors.email}</p>
-									<div className="field">
-										<label>Password</label>
-										<input
-											type="password"
-											name="password"
-											placeholder="Password"
-											value={formValues.password}
-											onChange={handleChange}
-										/>
-									</div>
-									<p>{formErrors.password}</p>
-									<button className="fluid ui button blue">Submit</button>
-								</div>
-							</form>
-						</div> */}
-					</div>
+					<CompanyForm 
+						invoiceRef={companyRef}
+						globalFormValues={globalFormValues}
+						setGlobalFormValues={setGlobalFormValues}
+						activeSections={activeSections}
+						setActiveSections={setActiveSections}
+					/>
 
 					{/* Invoice sections Client */}
 					<ClientForm 
