@@ -1,0 +1,49 @@
+.form-group {
+	margin-bottom: 1rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+.form-control {
+	display: block;
+	width: 100%;
+	padding: 0.25rem 0.5rem;
+	margin-top: 0.125rem;
+    font-size: .875rem;
+    line-height: 1.5;
+	color: #495057;
+	background-color: #f9fafe;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.form-control:focus {
+	color: #495057;
+	background-color: #fff;
+	border-color: #80bdff;
+	outline: 0;
+	box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+}
+
+.input-field-wrapper {
+	position: relative;
+}
+.input-field-wrapper i{
+	position: absolute;
+	right: 0;
+	top: 25%;
+	color: #dc3545;
+}
