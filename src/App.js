@@ -10,6 +10,7 @@ import Clients from './pages/clients';
 
 import SignInForm from './pages/Public/signIn';
 import SignUpForm from './pages/Public/signUp';
+import Toastr from './components/toastr/Toastr';
 
 const App = (props) => {
   const isLoggedIn = props.isLoggedIn || localStorage.getItem("access-token")
@@ -38,6 +39,7 @@ const App = (props) => {
           </Routes>
         </>
       }
+      <Toastr/>
     </>
   );
 }

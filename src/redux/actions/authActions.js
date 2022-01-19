@@ -6,7 +6,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  SET_MESSAGE,
+  SET_TOASTR,
 } from "./types";
 
 export const register = (data) => async (dispatch) => {
@@ -18,7 +18,7 @@ export const register = (data) => async (dispatch) => {
     });
 
     dispatch({
-      type: SET_MESSAGE,
+      type: SET_TOASTR,
       payload: res.data.message,
     });
 
@@ -36,7 +36,7 @@ export const register = (data) => async (dispatch) => {
       });
 
       dispatch({
-        type: SET_MESSAGE,
+        type: SET_TOASTR,
         payload: message,
       });
 
@@ -67,7 +67,7 @@ export const login = (data) => async (dispatch) => {
       });
 
       dispatch({
-        type: SET_MESSAGE,
+        type: SET_TOASTR,
         payload: message,
       });
 

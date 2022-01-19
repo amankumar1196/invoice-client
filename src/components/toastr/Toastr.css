@@ -1,0 +1,92 @@
+.alert-wrapper {
+  position: fixed;
+  top: 4rem;
+  right: 2rem;
+  display: inline-block;
+  min-width: 20rem;
+}
+.alert {
+  padding: 0.8rem 1.75rem 0.8rem 0.8rem;
+  margin: 1rem 0;
+  opacity: 1;
+  background: var(--light-color);
+  color: #333;
+  position: relative;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.alert .close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #fff;
+  opacity: 0.8;
+}
+.alert .toastr-progress {
+  position: absolute;
+  bottom: 0.5px;
+  left: 0;
+}
+.alert-primary {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.alert-light {
+  background: var(--light-color);
+  color: #333;
+}
+
+.alert-info {
+  color: #fff;
+  background: #6195d0;
+}
+.alert-warning {
+  color: #fff;
+  background: #e2c35f;
+}
+.alert-danger {
+  color: #fff;
+  background: #c65d4b;
+}
+.alert-success {
+  color: #fff;
+  background: #6fb64c;
+}
+
+.alert-white {
+  background: #fff;
+  color: #333;
+  border: #ccc solid 1px;
+}
+
+.toastr-progress {
+  width: 100%;
+  background-color: #ddd;
+  border-radius: 10px;
+  opacity: 0.5;
+}
+
+.toastr-bar {
+  width: 0%;
+  height: 6px;
+  animation: progres 5s infinite linear;
+}
+
+@keyframes progres{
+  0%{
+    width: 0%;
+  }
+  25%{
+      width: 25%;
+  }
+  50%{
+      width: 50%;
+  }
+  75%{
+      width: 75%;
+  }
+  100%{
+      width: 100%;
+  }
+};

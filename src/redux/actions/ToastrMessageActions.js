@@ -1,10 +1,17 @@
-import { SET_MESSAGE, CLEAR_MESSAGE } from "./types";
+import { SET_TOASTR, CLEAR_TOASTR } from "./types";
+import { v4 as uuidv4 } from 'uuid';
 
-export const setMessage = (message) => ({
-  type: SET_MESSAGE,
-  payload: message,
-});
+export const setToastr = (msg, alertType, timeout = 5000) => dispatch => {
+  const id = uuidv4();
+  dispatch({
+    type: SET_TOASTR,
+    payload: { msg, alertType, id }
+  });
 
-export const clearMessage = () => ({
-  type: CLEAR_MESSAGE,
+  setTimeout(() => dispatch(clearToastr(id)), timeout);
+};
+
+export const clearToastr = (id) => ({
+  type: CLEAR_TOASTR,
+  payload: id
 });

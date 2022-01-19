@@ -4,8 +4,8 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
 
-export const SET_MESSAGE = "SET_MESSAGE";
-export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
+export const SET_TOASTR = "SET_TOASTR";
+export const CLEAR_TOASTR = "CLEAR_TOASTR";
 
 export const CREATE_INVOICE = "CREATE_INVOICE";
 export const RETRIEVE_INVOICES = "RETRIEVE_INVOICES";
