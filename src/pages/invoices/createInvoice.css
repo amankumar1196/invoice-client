@@ -460,3 +460,74 @@ div.preview-section-wrapper > div > table > tbody > tr > td:last-child {
 	background-color: #878d93;
 	border-color: #878d93;
 }
+
+#progressbar {
+	/* margin-bottom: 30px; */
+	overflow: hidden;
+	color: lightgrey;
+	padding-inline-start: 0px;
+	padding: 1rem 2rem;
+}
+
+#progressbar .active {
+	color: #3a67d9
+}
+
+#progressbar li {
+	list-style-type: none;
+	font-size: 15px;
+	width: 33%;
+	float: left;
+	position: relative;
+	font-weight: 400;
+	text-align: center;
+}
+
+#progressbar #account:before {
+	font-family: boxicons;
+	content: "\ea18"
+}
+
+#progressbar #personal:before {
+	font-family: boxicons;
+	content: "\ec67"
+}
+
+#progressbar #payment:before {
+	font-family: boxicons;
+	content: "\f030"
+}
+
+#progressbar #confirm:before {
+	font-family: boxicons;
+	content: "\ec24"
+}
+
+#progressbar li:before {
+	width: 50px;
+	height: 50px;
+	line-height: 45px;
+	display: block;
+	font-size: 20px;
+	color: #ffffff;
+	background: #cacfd5;
+	border-radius: 50%;
+	margin: 0 auto 10px auto;
+	padding: 2px
+}
+
+#progressbar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: #cacfd5;
+	position: absolute;
+	left: 0;
+	top: 25px;
+	z-index: -1
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+	background: #3a67d9
+}

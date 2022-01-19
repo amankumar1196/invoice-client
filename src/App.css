@@ -47,6 +47,7 @@ body {
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
   color: var(--text-color);
+  background-color: var(--body-color);
 }
 
 h1 {
@@ -340,7 +341,6 @@ p {
     padding: 64px 0px 0px 78px;
   }
   .main-content {
-    background-color: var(--body-color);
     padding: 32px 32px;
     min-height: calc(100vh - 4rem);
   }
@@ -349,6 +349,9 @@ p {
   }
 }
 
+.visiblity-hidden {
+  visibility: hidden;
+}
 .d-flex {
   display: flex !important;
 }

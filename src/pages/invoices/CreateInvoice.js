@@ -17,6 +17,7 @@ function CreateInvoice(props) {
 		client: {}
 	})
 	const [activeSections, setActiveSections] = useState({logo: true, company: true, client: true})
+	const [activeStep, setActiveStep] = useState({invoiceItems: false, company: true, client: false})
 	const inputRef = useRef(null);
 	const invoiceItemsRef = useRef();
 	const clientRef = useRef();
@@ -115,72 +116,115 @@ function CreateInvoice(props) {
 					</div>
 
 					{/* Invoice sections */}
-					{/* Invoice sections Logo */}
-					<button class={`accordion ${!activeSections.logo && "mb-16"}`} onClick={()=> setActiveSections({...activeSections, logo: !activeSections.logo})}>
-						<div class="d-flex align-items-center justify-content-between">
-							<p class="accordion-header d-flex align-items-center">
-								<i class='bx bx-photo-album'></i>
-								<span>Add Logo</span>
-							</p>
-							<p><i class={`bx fs-24 ${!activeSections.logo ? "bx-chevron-right" : "bx-chevron-down"}`}></i></p>
-						</div>
-					</button>
-					<div class={`panel ${activeSections.logo && "active"}`}>
-						{!file ? 
-							<div 
-								class={`drag-area ${isDrop ? "active" : ""}`} 
-								onDragOver={onDragOver} 
-								onDragLeave={onDragLeave}
-								onDrop={onDrop}
-							>
-								<div class="icon">
-									<i class='bx bxs-file-image' ></i>
-								</div>
+					<ul id="progressbar">
+						<li class={activeStep.company && "active"} id="account" onClick={() => setActiveStep({company: true, client: false, invoiceItems: false})}><strong>Company</strong></li>
+						<li class={activeStep.client && "active"} id="personal" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}><strong>Client</strong></li>
+						<li class={activeStep.invoiceItems && "active"} id="confirm" onClick={() => setActiveStep({company: false, client: false, invoiceItems: true})}><strong>Invoice Items</strong></li>
+					</ul>
 
-								{isDrop ?
-									<span class="drag-header">Release to Upload</span>
-									:
-									<span class="drag-header">Drop your image here or <span class="button" onClick={()=> inputRef.current.click()}>browse</span></span>
+					<div style={{display: !activeStep.company ? "none" : "block"}}>
+						{/* Invoice sections Logo */}
+						<button class={`accordion ${!activeSections.logo && "mb-16"}`} onClick={()=> setActiveSections({...activeSections, logo: !activeSections.logo})}>
+							<div class="d-flex align-items-center justify-content-between">
+								<p class="accordion-header d-flex align-items-center">
+									<i class='bx bx-photo-album'></i>
+									<span>Add Logo</span>
+								</p>
+								<p><i class={`bx fs-24 ${!activeSections.logo ? "bx-chevron-right" : "bx-chevron-down"}`}></i></p>
+							</div>
+						</button>
+						<div class={`panel ${activeSections.logo && "active"}`}>
+							{!file ? 
+								<div 
+									class={`drag-area ${isDrop ? "active" : ""}`} 
+									onDragOver={onDragOver} 
+									onDragLeave={onDragLeave}
+									onDrop={onDrop}
+								>
+									<div class="icon">
+										<i class='bx bxs-file-image' ></i>
+									</div>
+
+									{isDrop ?
+										<span class="drag-header">Release to Upload</span>
+										:
+										<span class="drag-header">Drop your image here or <span class="button" onClick={()=> inputRef.current.click()}>browse</span></span>
+									}
+									<input ref={inputRef} type="file" onChange={fileUpload} hidden/>
+									<span class="drag-header-subtitle">Supports: JPG, JPEG, PNG</span>
+
+								</div>
+								:
+								<div class="drag-area">
+									<img class="uploaded-file pt-24" src={file} />
+									<div class="d-flex align-items-center pt-24 pb-16">
+										<button class="btn btn-sm btn-outline-danger d-flex align-items-center mr-8" onClick={()=> setFile(null)}><i class='bx bx-x-circle mr-8 fs-24'></i> Cancel</button>
+										<button class="btn btn-sm btn-outline-primary d-flex align-items-center ml-8" onClick={()=>{}}><i class='bx bx-cloud-upload mr-8 fs-24'></i> Upload</button>
+									</div>
+								</div>
 								}
-								<input ref={inputRef} type="file" onChange={fileUpload} hidden/>
-								<span class="drag-header-subtitle">Supports: JPG, JPEG, PNG</span>
+						</div>
 
-							</div>
-							:
-							<div class="drag-area">
-								<img class="uploaded-file pt-24" src={file} />
-								<div class="d-flex align-items-center pt-24 pb-16">
-									<button class="btn btn-sm btn-outline-danger d-flex align-items-center mr-8" onClick={()=> setFile(null)}><i class='bx bx-x-circle mr-8 fs-24'></i> Cancel</button>
-									<button class="btn btn-sm btn-outline-primary d-flex align-items-center ml-8" onClick={()=>{}}><i class='bx bx-cloud-upload mr-8 fs-24'></i> Upload</button>
-								</div>
-							</div>
-							}
+						{/* Invoice sections Company */}
+						<CompanyForm 
+							invoiceRef={companyRef}
+							globalFormValues={globalFormValues}
+							setGlobalFormValues={setGlobalFormValues}
+							activeSections={activeSections}
+							setActiveSections={setActiveSections}
+						/>
+
+						<div className="d-flex justify-content-between">
+							<button className="btn btn-sm btn-outline-primary d-flex align-items-center visiblity-hidden" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
+								<i class="bx bx-left-arrow-alt mr-8"></i>
+								Prev
+							</button>
+							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
+								Next
+								<i class="bx bx-right-arrow-alt ml-8"></i>
+							</button>
+						</div>
 					</div>
 
-					{/* Invoice sections Company */}
-					<CompanyForm 
-						invoiceRef={companyRef}
-						globalFormValues={globalFormValues}
-						setGlobalFormValues={setGlobalFormValues}
-						activeSections={activeSections}
-						setActiveSections={setActiveSections}
-					/>
-
 					{/* Invoice sections Client */}
-					<ClientForm 
-						invoiceRef={clientRef}
-						globalFormValues={globalFormValues}
-						setGlobalFormValues={setGlobalFormValues}
-						activeSections={activeSections}
-						setActiveSections={setActiveSections}
-					/>
+					<div style={{display: !activeStep.client ? "none" : "block"}}>
+						<ClientForm 
+							invoiceRef={clientRef}
+							globalFormValues={globalFormValues}
+							setGlobalFormValues={setGlobalFormValues}
+							activeSections={activeSections}
+							setActiveSections={setActiveSections}
+						/>
+						<div className="d-flex justify-content-between">
+							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: true, client: false, invoiceItems: false})}>
+								<i class="bx bx-left-arrow-alt mr-8"></i>
+								Prev
+							</button>
+							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: false, invoiceItems: true})}>
+								Next
+								<i class="bx bx-right-arrow-alt ml-8"></i>
+							</button>
+						</div>
+					</div>
 
 					{/* Invoice sections Data Details */}
-					<InvoiceItemsForm 
-						invoiceRef={invoiceItemsRef}
-						globalFormValues={globalFormValues}
-						setGlobalFormValues={setGlobalFormValues}
-					/>
+					<div style={{display: !activeStep.invoiceItems ? "none" : "block"}}>
+						<InvoiceItemsForm 
+							invoiceRef={invoiceItemsRef}
+							globalFormValues={globalFormValues}
+							setGlobalFormValues={setGlobalFormValues}
+						/>
+						<div className="d-flex justify-content-between">
+							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
+								<i class="bx bx-left-arrow-alt mr-8"></i>
+								Prev
+							</button>
+							{/* <button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: false, invoiceItems: true})}>
+								Next
+								<i class="bx bx-right-arrow-alt ml-8"></i>
+							</button> */}
+						</div>
+					</div>
 
 				</div>
 				<div class="create-invoice-right">

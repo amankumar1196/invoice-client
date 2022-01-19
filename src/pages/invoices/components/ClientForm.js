@@ -75,10 +75,7 @@ function ClientForm(props) {
                   <span>Client Details</span>
                 </p>
                 <div className="d-flex align-items-center">
-                  <button className="btn btn-sm btn-outline-primary mr-16" type="submit">
-                    Create New
-                  </button>
-                  { clients.length > 0 && <div className="form-group w-100 pr-16 mb-0" style={{maxWidth: "10rem"}}>
+                  { clients.length > 0 && <div className="form-group w-100 mb-0" style={{maxWidth: "10rem"}}>
                     <div class="input-field-wrapper">
                       <select className="form-control" onChange={(e)=>props.dispatch(getClient(e.target.value))}>
                         <option value=""></option>
@@ -86,7 +83,10 @@ function ClientForm(props) {
                       </select>
                     </div>
                   </div> }
-                  <i class={`bx fs-24 ${!activeSections.client ? "bx-chevron-right" : "bx-chevron-down"}`} onClick={()=> setActiveSections({...activeSections, client: !activeSections.client})}></i>
+                  <button className="btn btn-sm btn-outline-primary ml-16" type="submit">
+                    Create New
+                  </button>
+                  {/* <i class={`bx fs-24 ${!activeSections.client ? "bx-chevron-right" : "bx-chevron-down"}`} onClick={()=> setActiveSections({...activeSections, client: !activeSections.client})}></i> */}
                 </div>
               </div>
             </button>

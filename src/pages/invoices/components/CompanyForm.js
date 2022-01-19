@@ -75,10 +75,7 @@ function CompanyForm(props) {
                   <span>Company Details</span>
                 </p>
                 <div className="d-flex align-items-center">
-                  <button className="btn btn-sm btn-outline-primary mr-16" type="submit">
-                    Create New
-                  </button>
-                  { companies.length > 0 && <div className="form-group w-100 pr-16 mb-0" style={{maxWidth: "10rem"}}>
+                  { companies.length > 0 && <div className="form-group w-100 mb-0" style={{maxWidth: "10rem"}}>
                     <div class="input-field-wrapper">
                       <select className="form-control" onChange={(e)=>props.dispatch(getCompany(e.target.value))}>
                         <option value=""></option>
@@ -86,7 +83,10 @@ function CompanyForm(props) {
                       </select>
                     </div>
                   </div> }
-                  <i class={`bx fs-24 ${!activeSections.company ? "bx-chevron-right" : "bx-chevron-down"}`} onClick={()=> setActiveSections({...activeSections, company: !activeSections.company})}></i>
+                  <button className="btn btn-sm btn-outline-primary ml-16" type="submit">
+                    Create New
+                  </button>
+                  {/* <i class={`bx fs-24 ${!activeSections.company ? "bx-chevron-right" : "bx-chevron-down"}`} onClick={()=> setActiveSections({...activeSections, company: !activeSections.company})}></i> */}
                 </div>
               </div>
             </button>
