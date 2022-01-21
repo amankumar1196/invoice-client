@@ -1,5 +1,5 @@
 import apiHandler from "../../utils/apiCaller";
-
+import { setToastr } from "../actions/ToastrMessageActions";
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -7,6 +7,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   SET_TOASTR,
+  CURRENT_USER,
 } from "./types";
 
 export const register = (data) => async (dispatch) => {
@@ -53,6 +54,8 @@ export const login = (data) => async (dispatch) => {
       payload: { user: res.data },
     });
 
+    dispatch(setToastr('Logged in successfully', 'info'));
+
     return Promise.resolve(res.data);
   } catch (error) {
       const message =
@@ -66,10 +69,7 @@ export const login = (data) => async (dispatch) => {
         type: LOGIN_FAIL,
       });
 
-      dispatch({
-        type: SET_TOASTR,
-        payload: message,
-      });
+      dispatch(setToastr(error.response.data.message, 'danger'));
 
     return Promise.reject(error);
   }
@@ -79,4 +79,18 @@ export const logout = () => async (dispatch) => {
   dispatch({
     type: LOGOUT,
   });
+};
+
+export const currentUser = () => async (dispatch) => {
+  try {
+    const res = await apiHandler.get("/v1/auth/current_user");
+
+    dispatch({
+      type: CURRENT_USER,
+      payload: res.data,
+    });
+
+  } catch (err) {
+    console.log(err);
+  }
 };

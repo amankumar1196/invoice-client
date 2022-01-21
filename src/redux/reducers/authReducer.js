@@ -4,13 +4,12 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  CURRENT_USER,
 } from "../actions/types";
 
 const user = JSON.parse(localStorage.getItem("user"));
 
-const initialState = user
-  ? { isLoggedIn: true, user }
-  : { isLoggedIn: false, user: null };
+const initialState = { isLoggedIn: false, user: null };
 
 function authReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -40,6 +39,12 @@ function authReducer(state = initialState, action) {
         isLoggedIn: false,
         user: null,
       };
+    case CURRENT_USER:
+      return {
+        ...state,
+        isLoggedIn: true,
+        user: payload,
+      }
     case LOGOUT:
       localStorage.removeItem("access-token");
 

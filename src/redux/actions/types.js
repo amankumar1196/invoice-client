@@ -3,6 +3,7 @@ export const REGISTER_FAIL = "REGISTER_FAIL";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
+export const CURRENT_USER = "CURRENT_USER";
 
 export const SET_TOASTR = "SET_TOASTR";
 export const CLEAR_TOASTR = "CLEAR_TOASTR";

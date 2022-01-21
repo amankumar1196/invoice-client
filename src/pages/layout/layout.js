@@ -1,10 +1,17 @@
 import Header from '../header/header';
 import Sidebar from '../sidebar/sidebar';
 import { Outlet } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { connect } from "react-redux";
+import { currentUser } from "../../redux/actions/authActions";
 
 function Layout(props) {
     const [isNavOpen, toggleNav] = useState(true);
+
+    useEffect(()=> {
+      props.dispatch(currentUser());
+    },[])
+
     return (
       <div>
         <Header isNavOpen={isNavOpen} />
@@ -18,4 +25,4 @@ function Layout(props) {
     );
 }
 
-export default Layout;
+export default connect()(Layout);
