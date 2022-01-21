@@ -1,12 +1,12 @@
 import apiHandler from "../../utils/apiCaller";
-
+import { setToastr } from "../actions/ToastrMessageActions";
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  SET_TOASTR,
+  CURRENT_USER,
 } from "./types";
 
 export const register = (data) => async (dispatch) => {
@@ -17,10 +17,7 @@ export const register = (data) => async (dispatch) => {
       type: REGISTER_SUCCESS,
     });
 
-    dispatch({
-      type: SET_TOASTR,
-      payload: res.data.message,
-    });
+    dispatch(setToastr('Sign up successfully', 'info'));
 
     return Promise.resolve(res.data);
   } catch (error) {
@@ -35,10 +32,7 @@ export const register = (data) => async (dispatch) => {
         type: REGISTER_FAIL,
       });
 
-      dispatch({
-        type: SET_TOASTR,
-        payload: message,
-      });
+      dispatch(setToastr(message, 'danger'));
 
     return Promise.reject(error);
   }
@@ -53,6 +47,8 @@ export const login = (data) => async (dispatch) => {
       payload: { user: res.data },
     });
 
+    dispatch(setToastr('Logged in successfully', 'info'));
+
     return Promise.resolve(res.data);
   } catch (error) {
       const message =
@@ -66,10 +62,7 @@ export const login = (data) => async (dispatch) => {
         type: LOGIN_FAIL,
       });
 
-      dispatch({
-        type: SET_TOASTR,
-        payload: message,
-      });
+      dispatch(setToastr(message, 'danger'));
 
     return Promise.reject(error);
   }
@@ -79,4 +72,28 @@ export const logout = () => async (dispatch) => {
   dispatch({
     type: LOGOUT,
   });
+};
+
+export const currentUser = () => async (dispatch) => {
+  try {
+    const res = await apiHandler.get("/v1/auth/current_user");
+
+    dispatch({
+      type: CURRENT_USER,
+      payload: res.data,
+    });
+
+    return Promise.resolve(res.data);
+  } catch (error) {
+      const message =
+        (error.res &&
+          error.res.data &&
+          error.res.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch(setToastr(message, 'danger'));
+
+    return Promise.reject(error);
+  }
 };
