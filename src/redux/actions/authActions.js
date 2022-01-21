@@ -6,7 +6,6 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  SET_TOASTR,
   CURRENT_USER,
 } from "./types";
 
@@ -18,10 +17,7 @@ export const register = (data) => async (dispatch) => {
       type: REGISTER_SUCCESS,
     });
 
-    dispatch({
-      type: SET_TOASTR,
-      payload: res.data.message,
-    });
+    dispatch(setToastr('Sign up successfully', 'info'));
 
     return Promise.resolve(res.data);
   } catch (error) {
@@ -36,10 +32,7 @@ export const register = (data) => async (dispatch) => {
         type: REGISTER_FAIL,
       });
 
-      dispatch({
-        type: SET_TOASTR,
-        payload: message,
-      });
+      dispatch(setToastr(message, 'danger'));
 
     return Promise.reject(error);
   }
@@ -69,7 +62,7 @@ export const login = (data) => async (dispatch) => {
         type: LOGIN_FAIL,
       });
 
-      dispatch(setToastr(error.response.data.message, 'danger'));
+      dispatch(setToastr(message, 'danger'));
 
     return Promise.reject(error);
   }
@@ -90,7 +83,17 @@ export const currentUser = () => async (dispatch) => {
       payload: res.data,
     });
 
-  } catch (err) {
-    console.log(err);
+    return Promise.resolve(res.data);
+  } catch (error) {
+      const message =
+        (error.res &&
+          error.res.data &&
+          error.res.data.message) ||
+        error.message ||
+        error.toString();
+
+      dispatch(setToastr(message, 'danger'));
+
+    return Promise.reject(error);
   }
 };

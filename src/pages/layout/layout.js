@@ -1,8 +1,8 @@
+import { useState, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { connect } from "react-redux";
 import Header from '../header/header';
 import Sidebar from '../sidebar/sidebar';
-import { Outlet } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { connect } from "react-redux";
 import { currentUser } from "../../redux/actions/authActions";
 
 function Layout(props) {
