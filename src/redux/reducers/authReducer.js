@@ -13,12 +13,14 @@ const initialState = { isLoggedIn: false, user: null };
 
 function authReducer(state = initialState, action) {
   const { type, payload } = action;
-
   switch (type) {
     case REGISTER_SUCCESS:
+      localStorage.setItem("access-token", payload.user.accessToken);
+
       return {
         ...state,
-        isLoggedIn: false,
+        isLoggedIn: true,
+        user: payload.user
       };
     case REGISTER_FAIL:
       return {
@@ -47,7 +49,6 @@ function authReducer(state = initialState, action) {
       }
     case LOGOUT:
       localStorage.removeItem("access-token");
-
       return {
         ...state,
         isLoggedIn: false,
