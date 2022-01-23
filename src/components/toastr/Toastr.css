@@ -4,6 +4,8 @@
   right: 2rem;
   display: inline-block;
   min-width: 20rem;
+  max-width: 25rem;
+  z-index: 1051;
 }
 .alert {
   padding: 0.8rem 1.75rem 0.8rem 0.8rem;
@@ -70,7 +72,7 @@
 .toastr-bar {
   width: 0%;
   height: 6px;
-  animation: progres 5s infinite linear;
+  animation: progres 3s infinite linear;
 }
 
 @keyframes progres{

@@ -1,25 +1,40 @@
 import "./client.css";
-import {NavLink} from 'react-router-dom';
 import { connect } from "react-redux";
 import { useEffect } from "react";
-import { deleteClient, retrieveClients } from "../../redux/actions/clientActions";
+import { deleteClient, retrieveClients, clientEditing, createClient, updateClient, getClient } from "../../redux/actions/clientActions";
+import ClientFormModal from "./ClientFormModal";
 
 function Clients(props) {
 	const { clients } = props;
+
 	useEffect(()=>{
 		props.dispatch(retrieveClients())
 	},[])
+
+	const clientFormEdit = (id) => {
+		if(id !== "new")
+			props.dispatch(getClient(id));
+		props.dispatch(clientEditing(id));
+	}	
+
+	const clientFormSubmit = (data) => {
+    const id = data.id || '';
+    if (id === '') {
+      props.dispatch(createClient(data));
+    } else {
+      props.dispatch(updateClient(data));
+    }
+  }
+
   return (
 		<div class="invoice-page-wrapper">
 			<div class="invoice-page-header">
 				<div class="invoice-page-header-left">
 					<h1>Clients</h1>
-					<NavLink to="/invoices/new">
-						<p class="invoice-create">
-							<i class='bx bx-plus-circle'></i>
-							Create Client
-						</p>
-					</NavLink>
+					<p class="invoice-create" onClick={() => clientFormEdit("new")}>
+						<i class='bx bx-plus-circle'></i>
+						Create Client
+					</p>
 				</div>
 				<div class="invoice-page-header-right">
 					<div class="header__search">
@@ -58,7 +73,7 @@ function Clients(props) {
 										<i class='bx bx-dots-horizontal-rounded action-icon'></i>
 									</span>
 									<div class="dropdown-content">
-										<a><i class='bx bx-edit'></i>Edit</a>
+										<a onClick={() => clientFormEdit(client.id)}><i class='bx bx-edit'></i>Edit</a>
 										<a onClick={()=> props.dispatch(deleteClient(client.id))}><i class='bx bx-archive'></i>Delete</a>
 									</div>
 								</div>
@@ -67,12 +82,12 @@ function Clients(props) {
 					)}
 				</tbody>
 			</table>
+			<ClientFormModal clientFormSubmit={ clientFormSubmit }/>
 		</div>
 	);
 }
 
 function mapStateToProps(state) {
-  const { message } = state.toastrMessage;
   const { client } = state;
   return {
     clients: client.clients,

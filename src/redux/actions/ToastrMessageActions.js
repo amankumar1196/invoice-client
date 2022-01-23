@@ -1,7 +1,7 @@
 import { SET_TOASTR, CLEAR_TOASTR } from "./types";
 import { v4 as uuidv4 } from 'uuid';
 
-export const setToastr = (msg, alertType, timeout = 5000) => dispatch => {
+export const setToastr = (msg, alertType, timeout = 3000) => dispatch => {
   const id = uuidv4();
   dispatch({
     type: SET_TOASTR,

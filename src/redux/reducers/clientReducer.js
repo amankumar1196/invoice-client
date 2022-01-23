@@ -5,11 +5,13 @@ import {
   UPDATE_CLIENT,
   DELETE_CLIENT,
   DELETE_ALL_CLIENTS,
+  SET_CLIENT_EDITING,
 } from "../actions/types";
 
 const initialState = {
   clients: [],
-  client: {}
+  client: {},
+  editing: false
 };
 
 function clientReducer(state = initialState, action) {
@@ -17,7 +19,7 @@ function clientReducer(state = initialState, action) {
 
   switch (type) {
     case CREATE_CLIENT:
-      return {...state, payload};
+      return { ...state, clients: [ ...state.clients, payload ], editing: false };
 
     case RETRIEVE_CLIENTS:
       return {...state, clients: payload};
@@ -26,7 +28,9 @@ function clientReducer(state = initialState, action) {
       return {...state, client: payload};
 
     case UPDATE_CLIENT:
-      return state.map((client) => {
+      return {
+        ...state,
+        clients: state.clients.map((client) => {
         if (client.id === payload.id) {
           return {
             ...client,
@@ -35,8 +39,9 @@ function clientReducer(state = initialState, action) {
         } else {
           return client;
         }
-      });
-
+      }),
+      editing: false
+    }
     case DELETE_CLIENT:
       return {
         ...state,
@@ -45,6 +50,13 @@ function clientReducer(state = initialState, action) {
 
     case DELETE_ALL_CLIENTS:
       return [];
+    
+    case SET_CLIENT_EDITING:
+      return {
+        ...state,
+        client: {},
+        editing: payload.id
+      };
 
     default:
       return state;
