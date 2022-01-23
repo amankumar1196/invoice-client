@@ -11,3 +11,31 @@ const apiHandler = axios.create({
 });
 
 export default apiHandler;
+
+
+// import axios from 'axios';
+// import qs from 'qs';
+// import { API_ROOT } from '../../env';
+
+// const API_VERSION_ONE_ADMIN = 'admin/v1';
+// const API_VERSION_ONE = 'v1';
+
+// function handleAPI(path, params, method, data = null) {
+//   const headers = {
+//     'Content-Type': 'application/json',
+//     'Accept': 'application/json',
+//     'Authorization': localStorage.getItem('Access-Token') || localStorage.getItem('Pdf-Access-Token') || '',
+//     'Suite-Name': process.env.REACT_APP_SUITE_NAME,
+//     'Store-Id': localStorage.getItem('StoreID'),
+//   };
+//   let url = API_ROOT + path;
+//   url = url +'?'+ qs.stringify(params, { arrayFormat: 'brackets' })
+//   return axios({
+//     method,
+//     url,
+//     data,
+//     headers
+//   });
+// }
+
+// export { handleAPI, API_VERSION_ONE_ADMIN, API_VERSION_ONE};

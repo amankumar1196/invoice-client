@@ -174,14 +174,14 @@ function CreateInvoice(props) {
 							setActiveSections={setActiveSections}
 						/>
 
-						<div className="d-flex justify-content-between">
+						<div className="d-flex justify-content-end">
 							<button className="btn btn-sm btn-outline-primary d-flex align-items-center visiblity-hidden" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
 								<i class="bx bx-left-arrow-alt mr-8"></i>
-								Prev
+								{/* Prev */}
 							</button>
 							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
-								Next
-								<i class="bx bx-right-arrow-alt ml-8"></i>
+								{/* Next */}
+								<i class="bx bx-right-arrow-alt"></i>
 							</button>
 						</div>
 					</div>
@@ -195,14 +195,14 @@ function CreateInvoice(props) {
 							activeSections={activeSections}
 							setActiveSections={setActiveSections}
 						/>
-						<div className="d-flex justify-content-between">
-							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: true, client: false, invoiceItems: false})}>
-								<i class="bx bx-left-arrow-alt mr-8"></i>
-								Prev
+						<div className="d-flex justify-content-end">
+							<button className="btn btn-sm btn-outline-primary d-flex align-items-center mr-8" onClick={() => setActiveStep({company: true, client: false, invoiceItems: false})}>
+								<i class="bx bx-left-arrow-alt"></i>
+								{/* Prev */}
 							</button>
 							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: false, invoiceItems: true})}>
-								Next
-								<i class="bx bx-right-arrow-alt ml-8"></i>
+								{/* Next */}
+								<i class="bx bx-right-arrow-alt"></i>
 							</button>
 						</div>
 					</div>
@@ -214,10 +214,10 @@ function CreateInvoice(props) {
 							globalFormValues={globalFormValues}
 							setGlobalFormValues={setGlobalFormValues}
 						/>
-						<div className="d-flex justify-content-between">
+						<div className="d-flex justify-content-end">
 							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
-								<i class="bx bx-left-arrow-alt mr-8"></i>
-								Prev
+								<i class="bx bx-left-arrow-alt"></i>
+								{/* Prev */}
 							</button>
 							{/* <button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: false, invoiceItems: true})}>
 								Next

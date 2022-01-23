@@ -7,6 +7,7 @@ import {
   GET_CLIENT,
   UPDATE_CLIENT,
   DELETE_CLIENT,
+  SET_CLIENT_EDITING
 } from "./types";
 
 
@@ -59,9 +60,9 @@ export const getClient = (id) => async (dispatch) => {
   }
 };
 
-export const updateClient = (id, data) => async (dispatch) => {
+export const updateClient = (data) => async (dispatch) => {
   try {
-    const res = await apiHandler.put(`/clients/${id}`, data);
+    const res = await apiHandler.put(`/v1/clients/${data.id}`, data);
 
     dispatch({
       type: UPDATE_CLIENT,
@@ -92,5 +93,17 @@ export const deleteClient = (id) => async (dispatch) => {
     console.log(err);
     dispatch(setToastr(err.response.data, 'danger'));
     return Promise.reject(err);
+  }
+};
+
+export const clientEditing = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SET_CLIENT_EDITING,
+      payload: {id},
+    });
+  } catch (err) {
+    dispatch(setToastr(err.response.data, 'danger'));
+    console.log(err);
   }
 };
