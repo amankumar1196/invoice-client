@@ -9,11 +9,12 @@ import { InputField } from '../../../components/form';
 import { retrieveInvoices } from '../../../redux/actions/invoiceActions';
 
 function InvoiceItemForm(props) {
-  const { globalFormValues, setGlobalFormValues, invoiceRef} = props
+  const { globalFormValues, setGlobalFormValues, invoiceRef, currentUser } = props
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(globalFormValues);
   })
+
   return (
     <Formik
       innerRef={invoiceRef}
@@ -21,8 +22,8 @@ function InvoiceItemForm(props) {
         name: "",
         date: new Date(),
         invoiceItems: [{description: "", quantity: 0, price: 0}],
-        userId: 1,
-        registerKey: "e769143f-a099-4ef8-acf5-7295955ede59"
+        userId: currentUser.id,
+        registerKey: currentUser.registerKey
       }}
       validationSchema={
         // props.setU(new Date()),

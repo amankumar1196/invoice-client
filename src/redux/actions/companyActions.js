@@ -1,5 +1,4 @@
 import apiHandler from "../../utils/apiCaller";
-import { qs } from "../../utils/helper";
 import { setToastr } from "./ToastrMessageActions";
 import {
   CREATE_COMPANY,
@@ -7,18 +6,18 @@ import {
   GET_COMPANY,
   UPDATE_COMPANY,
   DELETE_COMPANY,
+  SET_COMPANY_EDITING
 } from "./types";
 
 
-export const createCompany = (data) => async (dispatch) => {
+export const createCompany = (data, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.post("/v1/companies", data);
+    const res = await apiHandler("POST", "/v1/companies", filters, data);
 
     dispatch({
       type: CREATE_COMPANY,
       payload: res.data,
     });
-
     dispatch(setToastr('Company Added Successfully', 'success'));
 
     return Promise.resolve(res.data);
@@ -28,27 +27,25 @@ export const createCompany = (data) => async (dispatch) => {
   }
 };
 
-export const retrieveCompanies = (filter) => async (dispatch) => {
+export const retrieveCompanies = (filters) => async (dispatch) => {
   try {
-    let url = "/v1/companies" 
-    let qst = true ? qs({userId: 1}) : "";
-    url = url +"?"+qst;
-    const res = await apiHandler.get(url);
+    const res = await apiHandler("GET", "/v1/companies", filters);
     
     dispatch({
       type: RETRIEVE_COMPANIES,
       payload: res.data,
     });
+    
   } catch (err) {
-    dispatch(setToastr(err.response.data, 'danger'));
     console.log(err);
+    dispatch(setToastr(err.response.data, 'danger'));
   }
 };
 
-export const getCompany = (id) => async (dispatch) => {
+export const getCompany = (id, filters) => async (dispatch) => {
   try {
-    let url = `/v1/companies/${id}` 
-    const res = await apiHandler.get(url);
+    const res = await apiHandler("GET", `/v1/companies/${id}`, filters);
+
     dispatch({
       type: GET_COMPANY,
       payload: res.data,
@@ -59,13 +56,13 @@ export const getCompany = (id) => async (dispatch) => {
   }
 };
 
-export const updateCompany = (id, data) => async (dispatch) => {
+export const updateCompany = (data, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.put(`/companies/${id}`, data);
+    const res = await apiHandler("PUT", `/v1/companies/${data.id}`, filters, data);
 
     dispatch({
       type: UPDATE_COMPANY,
-      payload: data,
+      payload: res.data,
     });
 
     dispatch(setToastr('Company Updated Successfully', 'success'));
@@ -79,7 +76,7 @@ export const updateCompany = (id, data) => async (dispatch) => {
 
 export const deleteCompany = (id) => async (dispatch) => {
   try {
-    const res = await apiHandler.delete(`/v1/companies/${id}`);
+    const res = await apiHandler("delete", `/v1/companies/${id}`);
 
     dispatch({
       type: DELETE_COMPANY,
@@ -93,5 +90,17 @@ export const deleteCompany = (id) => async (dispatch) => {
     console.log(err);
     dispatch(setToastr(err.response.data, 'danger'));
     return Promise.reject(err);
+  }
+};
+
+export const companyEditing = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SET_COMPANY_EDITING,
+      payload: {id},
+    });
+  } catch (err) {
+    dispatch(setToastr(err.response.data, 'danger'));
+    console.log(err);
   }
 };

@@ -16,9 +16,9 @@ const SignupForm = (props) => {
           firstName: '',
           lastName: '',
           email: '',
-          password: '',
-          acceptedTerms: false, // added for our checkbox
-          role: 'user', // added for our select
+          password: '', 
+          phone: "",
+          acceptedTerms: false // added for our checkbox
         }}
         validationSchema={Yup.object({
           firstName: Yup.string()
@@ -34,7 +34,7 @@ const SignupForm = (props) => {
             .required('Required')
         })}
         onSubmit={(values, { setSubmitting }) => {
-          props.dispatch(register(values))
+          props.dispatch(register(values, { include: ["address", "roles"] }))
           // setTimeout(() => {
           //   alert(JSON.stringify(values, null, 2));
           //   setSubmitting(false);
@@ -42,16 +42,27 @@ const SignupForm = (props) => {
         }}
       >
         <Form>
-          <InputField
-            label="First Name"
-            name="firstName"
-            type="text"
-            placeholder=""
-          />
+          <div className="d-flex align-items-center w-100">
+            <InputField
+              label="First Name"
+              name="firstName"
+              type="text"
+              placeholder=""
+              wrapperClass="form-group w-100 pr-16"
+            />
+
+            <InputField
+              label="Last Name"
+              name="lastName"
+              type="text"
+              placeholder=""
+              wrapperClass="form-group w-100 pl-16"
+            />
+          </div>
 
           <InputField
-            label="Last Name"
-            name="lastName"
+            label="Phone"
+            name="phone"
             type="text"
             placeholder=""
           />

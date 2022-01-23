@@ -42,6 +42,7 @@ function clientReducer(state = initialState, action) {
       }),
       editing: false
     }
+    
     case DELETE_CLIENT:
       return {
         ...state,
@@ -54,7 +55,7 @@ function clientReducer(state = initialState, action) {
     case SET_CLIENT_EDITING:
       return {
         ...state,
-        client: {},
+        client: !payload.id || payload.id == "new" ? {} : state.client,
         editing: payload.id
       };
 

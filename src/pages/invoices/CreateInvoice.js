@@ -10,6 +10,7 @@ import ClientForm from "./components/ClientForm";
 import CompanyForm from "./components/CompanyForm";
 
 function CreateInvoice(props) {
+	const { currentUser } = props;
 	const [isDrop, setDropState] = useState(false)
 	const [file, setFile] = useState(null)
 	const [globalFormValues, setGlobalFormValues] = useState({
@@ -175,12 +176,7 @@ function CreateInvoice(props) {
 						/>
 
 						<div className="d-flex justify-content-end">
-							<button className="btn btn-sm btn-outline-primary d-flex align-items-center visiblity-hidden" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
-								<i class="bx bx-left-arrow-alt mr-8"></i>
-								{/* Prev */}
-							</button>
 							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
-								{/* Next */}
 								<i class="bx bx-right-arrow-alt"></i>
 							</button>
 						</div>
@@ -198,10 +194,8 @@ function CreateInvoice(props) {
 						<div className="d-flex justify-content-end">
 							<button className="btn btn-sm btn-outline-primary d-flex align-items-center mr-8" onClick={() => setActiveStep({company: true, client: false, invoiceItems: false})}>
 								<i class="bx bx-left-arrow-alt"></i>
-								{/* Prev */}
 							</button>
 							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: false, invoiceItems: true})}>
-								{/* Next */}
 								<i class="bx bx-right-arrow-alt"></i>
 							</button>
 						</div>
@@ -213,16 +207,12 @@ function CreateInvoice(props) {
 							invoiceRef={invoiceItemsRef}
 							globalFormValues={globalFormValues}
 							setGlobalFormValues={setGlobalFormValues}
+							currentUser={currentUser}
 						/>
 						<div className="d-flex justify-content-end">
 							<button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: true, invoiceItems: false})}>
 								<i class="bx bx-left-arrow-alt"></i>
-								{/* Prev */}
 							</button>
-							{/* <button className="btn btn-sm btn-outline-primary d-flex align-items-center" onClick={() => setActiveStep({company: false, client: false, invoiceItems: true})}>
-								Next
-								<i class="bx bx-right-arrow-alt ml-8"></i>
-							</button> */}
 						</div>
 					</div>
 
@@ -325,23 +315,23 @@ function CreateInvoice(props) {
 										<div class="details-item">
 											<span>Address 1</span>
 											{/* <p>Atrim-45, Quack City</p> */}
-											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address_line_1}</p>
+											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.address_line_1}</p>
 										</div>
 										<div class="details-item">
 											<span>Address 2</span>
 											{/* <p>Phase 8B, Mohali, Punjab</p> */}
-											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address_line_2}</p>
+											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.address_line_2}</p>
 										</div>
 										<div class="d-flex justify-content-between">
 											<div class="details-item mr-8">
 												<span>State</span>
 												{/* <p>Mohali</p> */}
-												<p>{clientRef.current && clientRef.current.values && clientRef.current.values.state}</p>
+												<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.state}</p>
 											</div>
 											<div class="details-item ml-8">
 												<span>Country</span>
 												{/* <p>India</p> */}
-												<p>{clientRef.current && clientRef.current.values && clientRef.current.values.country}</p>
+												<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.country}</p>
 											</div>
 										</div>
 										
@@ -388,9 +378,10 @@ function CreateInvoice(props) {
 }
 
 function mapStateToProps(state) {
-  const { isLoggedIn } = state.auth;
+  const { isLoggedIn, user } = state.auth;
   const { message } = state.toastrMessage;
   return {
+		currentUser: user,
     isLoggedIn,
     message
   };

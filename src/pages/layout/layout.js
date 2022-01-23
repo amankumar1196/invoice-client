@@ -3,14 +3,9 @@ import { Outlet } from 'react-router-dom';
 import { connect } from "react-redux";
 import Header from '../header/header';
 import Sidebar from '../sidebar/sidebar';
-import { currentUser } from "../../redux/actions/authActions";
 
 function Layout(props) {
     const [isNavOpen, toggleNav] = useState(true);
-
-    useEffect(()=> {
-      props.dispatch(currentUser());
-    },[])
 
     return (
       <div>

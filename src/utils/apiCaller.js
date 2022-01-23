@@ -1,14 +1,48 @@
-import axios from "axios";
+// import axios from "axios";
 
-const token = localStorage.getItem('access-token');
+// const token = localStorage.getItem('access-token');
 
-const apiHandler = axios.create({
-  baseURL: "http://localhost:8080/api",
-  headers: {
-    "Content-type": "application/json",
-    'x-access-token': token && token
-  }
-});
+// const apiHandler = axios.create({
+//   baseURL: "http://localhost:8080/api",
+//   headers: {
+//     "Content-type": "application/json",
+//     'x-access-token': token && token
+//   }
+// });
+
+// export default apiHandler;
+
+
+import axios from 'axios';
+import qs from "qs";
+
+const API_ROOT = "http://localhost:8080/api"
+
+function apiHandler(method, endpointUrl, params, data = null) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'x-access-token': localStorage.getItem('access-token') || ''
+  };
+  let url = API_ROOT + endpointUrl;
+  if(params)
+    url = url + '?'+ qs.stringify(params, { arrayFormat: 'brackets' })
+  else url = url
+  
+  if(data){
+    return axios({
+      method,
+      url,
+      data,
+      headers
+    });
+  } else return axios({
+    method,
+    url,
+    headers
+  });
+  
+}
 
 export default apiHandler;
 

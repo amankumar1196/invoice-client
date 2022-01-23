@@ -11,9 +11,9 @@ import {
 } from "./types";
 
 
-export const createClient = (data) => async (dispatch) => {
+export const createClient = (data, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.post("/v1/clients", data);
+    const res = await apiHandler("POST", "/v1/clients", filters, data);
 
     dispatch({
       type: CREATE_CLIENT,
@@ -28,12 +28,9 @@ export const createClient = (data) => async (dispatch) => {
   }
 };
 
-export const retrieveClients = (filter) => async (dispatch) => {
+export const retrieveClients = (filters) => async (dispatch) => {
   try {
-    let url = "/v1/clients" 
-    let qst = true ? qs({userId: 1}) : "";
-    url = url +"?"+qst;
-    const res = await apiHandler.get(url);
+    const res = await apiHandler("GET", "/v1/clients", filters);
     
     dispatch({
       type: RETRIEVE_CLIENTS,
@@ -46,10 +43,10 @@ export const retrieveClients = (filter) => async (dispatch) => {
   }
 };
 
-export const getClient = (id) => async (dispatch) => {
+export const getClient = (id, filters) => async (dispatch) => {
   try {
-    let url = `/v1/clients/${id}` 
-    const res = await apiHandler.get(url);
+    const res = await apiHandler("GET", `/v1/clients/${id}`, filters);
+
     dispatch({
       type: GET_CLIENT,
       payload: res.data,
@@ -60,13 +57,14 @@ export const getClient = (id) => async (dispatch) => {
   }
 };
 
-export const updateClient = (data) => async (dispatch) => {
+export const updateClient = (data, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.put(`/v1/clients/${data.id}`, data);
+    const res = await apiHandler("PUT", `/v1/clients/${data.id}`, filters, data);
+
 
     dispatch({
       type: UPDATE_CLIENT,
-      payload: data,
+      payload: res.data,
     });
 
     dispatch(setToastr('Client Updated Successfully', 'success'));
@@ -80,7 +78,8 @@ export const updateClient = (data) => async (dispatch) => {
 
 export const deleteClient = (id) => async (dispatch) => {
   try {
-    const res = await apiHandler.delete(`/v1/clients/${id}`);
+    const res = await apiHandler("delete", `/v1/clients/${id}`);
+
     dispatch({
       type: DELETE_CLIENT,
       payload: res.data,

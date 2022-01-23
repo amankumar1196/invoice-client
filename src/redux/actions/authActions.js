@@ -9,12 +9,13 @@ import {
   CURRENT_USER,
 } from "./types";
 
-export const register = (data) => async (dispatch) => {
+export const register = (data, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.post("/v1/auth/signup", data);
+    const res = await apiHandler("POST", "/v1/auth/signup", filters, data);
 
     dispatch({
       type: REGISTER_SUCCESS,
+      payload: res.data
     });
 
     dispatch(setToastr('Sign up successfully', 'info'));
@@ -22,13 +23,13 @@ export const register = (data) => async (dispatch) => {
     return Promise.resolve(res.data);
   } catch (error) {
     const message =
-        (error.res &&
-          error.res.data &&
-          error.res.data.message) ||
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
         error.message ||
         error.toString();
 
-      dispatch({
+        dispatch({
         type: REGISTER_FAIL,
       });
 
@@ -38,9 +39,9 @@ export const register = (data) => async (dispatch) => {
   }
 };
 
-export const login = (data) => async (dispatch) => {
+export const login = (data, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.post("/v1/auth/signin", data);
+    const res = await apiHandler("POST", "/v1/auth/signin", filters, data);
 
     dispatch({
       type: LOGIN_SUCCESS,
@@ -52,9 +53,9 @@ export const login = (data) => async (dispatch) => {
     return Promise.resolve(res.data);
   } catch (error) {
       const message =
-        (error.res &&
-          error.res.data &&
-          error.res.data.message) ||
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
         error.message ||
         error.toString();
 
@@ -74,9 +75,9 @@ export const logout = () => async (dispatch) => {
   });
 };
 
-export const currentUser = () => async (dispatch) => {
+export const getCurrentUser = (filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.get("/v1/auth/current_user");
+    const res = await apiHandler("GET", "/v1/auth/current_user", filters);
 
     dispatch({
       type: CURRENT_USER,

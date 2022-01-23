@@ -9,9 +9,9 @@ import {
 } from "./types";
 
 
-export const createInvoice = (data) => async (dispatch) => {
+export const createInvoice = (data, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.post("/v1/invoices", data);
+    const res = await apiHandler("post", "/v1/invoices", filters, data);
 
     dispatch({
       type: CREATE_INVOICE,
@@ -24,9 +24,9 @@ export const createInvoice = (data) => async (dispatch) => {
   }
 };
 
-export const retrieveInvoices = () => async (dispatch) => {
+export const retrieveInvoices = (filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.get("/v1/invoices");
+    const res = await apiHandler("GET", "/v1/invoices", filters);
     
     dispatch({
       type: RETRIEVE_INVOICES,

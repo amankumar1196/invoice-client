@@ -5,6 +5,7 @@ import {
   UPDATE_COMPANY,
   DELETE_COMPANY,
   DELETE_ALL_COMPANIES,
+  SET_COMPANY_EDITING,
 } from "../actions/types";
 
 const initialState = {
@@ -17,7 +18,7 @@ function companyReducer(state = initialState, action) {
 
   switch (type) {
     case CREATE_COMPANY:
-      return {...state, payload};
+      return { ...state, companies: [ ...state.companies, payload ], editing: false };
 
     case RETRIEVE_COMPANIES:
       return {...state, companies: payload};
@@ -25,17 +26,21 @@ function companyReducer(state = initialState, action) {
     case GET_COMPANY:
       return {...state, company: payload};
 
-    case UPDATE_COMPANY:
-      return state.companies.map((company) => {
-        if (company.id === payload.id) {
-          return {
-            ...company,
-            ...payload,
-          };
-        } else {
-          return company;
-        }
-      });
+      case UPDATE_COMPANY:
+        return {
+          ...state,
+          companies: state.companies.map((company) => {
+          if (company.id === payload.id) {
+            return {
+              ...company,
+              ...payload,
+            };
+          } else {
+            return company;
+          }
+        }),
+        editing: false
+      }
 
     case DELETE_COMPANY:
       return {
@@ -45,7 +50,13 @@ function companyReducer(state = initialState, action) {
 
     case DELETE_ALL_COMPANIES:
       return [];
-
+      
+    case SET_COMPANY_EDITING:
+      return {
+        ...state,
+        company: !payload.id || payload.id == "new" ? {} : state.company,
+        editing: payload.id
+      };
     default:
       return state;
   }

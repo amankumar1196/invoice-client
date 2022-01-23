@@ -1,6 +1,7 @@
 import './App.css';
 import { Routes, Route, Navigate} from 'react-router-dom';
 import { connect } from 'react-redux';
+import { useEffect } from 'react';
 import Layout from './pages/layout/layout';
 import PublicLayout from './pages/layout/publicLayout';
 import Dashboard from './pages/dashboard'
@@ -11,22 +12,31 @@ import Clients from './pages/clients';
 import SignInForm from './pages/Public/signIn';
 import SignUpForm from './pages/Public/signUp';
 import Toastr from './components/toastr/Toastr';
+import { getCurrentUser } from "./redux/actions/authActions";
 
 const App = (props) => {
-  const isLoggedIn = props.isLoggedIn || localStorage.getItem("access-token")
+  const { isLoggedIn, currentUser } = props;
+  const isLogged = isLoggedIn || localStorage.getItem("access-token")
+
+  useEffect(()=> {
+    isLogged && props.dispatch(getCurrentUser({ include: ["address", "roles"] }))
+  },[isLogged])
+
   return (
     <>
       {
-        isLoggedIn ?
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="invoices" element={<Invoices />} />
-            <Route path="invoices/new" element={<CreateInvoice />} />
-            <Route path="clients" element={<Clients />} />
-            <Route path="/" element={<Dashboard />} />
-          </Route>
-          <Route path='*' element={<Navigate to='/' />} />
-        </Routes>
+        isLogged ?
+          <Routes>
+            { currentUser && [
+              <Route path="/" element={<Layout />}>
+                <Route path="invoices" element={<Invoices />} />
+                <Route path="invoices/new" element={<CreateInvoice />} />
+                <Route path="clients" element={<Clients />} />
+                <Route path="/" element={<Dashboard />} />
+              </Route>,
+              <Route path='*' element={<Navigate to='/' />} /> ]
+            }
+          </Routes>
         :
         <>
           <Routes>
@@ -45,11 +55,10 @@ const App = (props) => {
 }
 
 function mapStateToProps(state) {
-  const { isLoggedIn } = state.auth;
-  const { message } = state.toastrMessage;
+  const { isLoggedIn, user } = state.auth;
   return {
     isLoggedIn,
-    message
+    currentUser: user
   };
 }
 

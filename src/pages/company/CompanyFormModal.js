@@ -1,22 +1,21 @@
-// import "./Client.css";
+// import "./Company.css";
 import { connect } from "react-redux";
-import { useEffect } from "react";
 import ModalPortal from "../../components/modal/ModalPortal";
 
-import { Formik, Form, FieldArray } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
 import { InputField, SelectField } from '../../components/form';
 import countries from "../../utils/countries";
-import { clientEditing } from '../../redux/actions/clientActions';
+import { companyEditing } from '../../redux/actions/companyActions';
 
-function ClientForm(props) {
-  const { clientFormSubmit, client, clientEditingId, currentUser } = props
+function CompanyForm(props) {
+  const { companyFormSubmit, company, companyEditingId, currentUser } = props
 
   let initialValues= null
-  if(client && client.id){
+  if(company && company.id){
     initialValues={
-      ...client
+      ...company
     }
   } else initialValues={
     name: "",
@@ -34,7 +33,7 @@ function ClientForm(props) {
 
   return (
     <ModalPortal>
-      <div class={`modal account-modal ${clientEditingId ? "show" : "fade"}`} id="editBudgetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true">
+      <div class={`modal account-modal ${companyEditingId ? "show" : "fade"}`} id="editBudgetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true">
         <div class="modal-dialog mt-0 modal-dialog-scrollable">
           <div class="modal-content h-100">
             <Formik
@@ -53,7 +52,7 @@ function ClientForm(props) {
                   .required('Required'),
               })}
               onSubmit={(values, { setSubmitting, resetForm }) => {
-                clientFormSubmit(values)
+                companyFormSubmit(values)
                 resetForm()
               }}>
 
@@ -62,14 +61,14 @@ function ClientForm(props) {
                   return (
                     <Form>
                       <div class="modal-header pt-24 px-24 border-bottom-0 d-flex align-items-center">
-                        <h3 class="text-neutral-900 mb-0" id="exampleModalLabel">{clientEditingId !== "new" ? "Update" : "Create"} Client</h3>
-                        <div class="cross-modal-icon curser-pointer close mr-8" onClick={() => props.dispatch(clientEditing(false))} data-dismiss="modal" aria-label="Close"><i class="bx bx-x text-neutral-900 font-size-24"></i></div>
+                        <h3 class="text-neutral-900 mb-0" id="exampleModalLabel">{companyEditingId !== "new" ? "Update" : "Create"} Company</h3>
+                        <div class="cross-modal-icon curser-pointer close mr-8" onClick={() => props.dispatch(companyEditing(false))} data-dismiss="modal" aria-label="Close"><i class="bx bx-x text-neutral-900 font-size-24"></i></div>
                       </div>
                       <div class="modal-body pt-0 px-24 pt-32">
                         <div>
                           <span className="d-block pb-16 fw-6">Basic details</span>
                           <InputField
-                            label="Client Name"
+                            label="Company Name"
                             name="name"
                             type="text"
                             placeholder=""
@@ -122,8 +121,8 @@ function ClientForm(props) {
                       </div>
                       <div class="modal-footer">
                         <div class="d-flex align-items-center justify-content-between w-100">
-                          <button class="btn btn-outline-secondary w-50 ml-16 mr-8 fs-16" type="button" onClick={() => props.dispatch(clientEditing(false))}>Cancel</button>
-                          <button class="btn btn-primary w-50 ml-8 mr-16 fs-16" type="submit">{clientEditingId !== "new" ? "Update" : "Create"}</button>
+                          <button class="btn btn-outline-secondary w-50 ml-16 mr-8 fs-16" type="button" onClick={() => props.dispatch(companyEditing(false))}>Cancel</button>
+                          <button class="btn btn-primary w-50 ml-8 mr-16 fs-16" type="submit">{companyEditingId !== "new" ? "Update" : "Create"}</button>
                         </div>
                       </div>
                     </Form>
@@ -138,12 +137,12 @@ function ClientForm(props) {
 }
 
 function mapStateToProps(state) {
-  const { client, auth } = state;
+  const { company, auth } = state;
   return {
-    client: client.client,
-    clientEditingId: client.editing,
+    company: company.company,
+    companyEditingId: company.editing,
     currentUser: auth.user
   };
 }
 
-export default connect(mapStateToProps)(ClientForm);
+export default connect(mapStateToProps)(CompanyForm);

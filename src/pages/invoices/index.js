@@ -7,9 +7,9 @@ import { startCase } from "lodash";
 import moment from "moment";
 
 function Invoices(props) {
-
+	const { currentUser } = props;
 	useEffect(()=> {
-		props.dispatch(retrieveInvoices());
+		props.dispatch(retrieveInvoices({extraParams: { registerKey: currentUser.registerKey}}))
 	},[])
 	
 	const getStatusClass = (status) => {
@@ -100,11 +100,10 @@ function Invoices(props) {
 }
 
 function mapStateToProps(state) {
-  const { invoice } = state;
-  const { message } = state.toastrMessage;
+  const { invoice, auth } = state;
   return {
     invoices: invoice.invoices,
-    message
+    currentUser: auth.user
   };
 }
 

@@ -1,14 +1,14 @@
-import "./client.css";
+import "./Client.css";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { deleteClient, retrieveClients, clientEditing, createClient, updateClient, getClient } from "../../redux/actions/clientActions";
 import ClientFormModal from "./ClientFormModal";
 
 function Clients(props) {
-	const { clients } = props;
+	const { clients, currentUser } = props;
 
 	useEffect(()=>{
-		props.dispatch(retrieveClients())
+		props.dispatch(retrieveClients({extraParams: { registerKey: currentUser.registerKey}, include: ["address"]}))
 	},[])
 
 	const clientFormEdit = (id) => {
@@ -88,10 +88,11 @@ function Clients(props) {
 }
 
 function mapStateToProps(state) {
-  const { client } = state;
+  const { client, auth } = state;
   return {
     clients: client.clients,
-    client: client.client
+    client: client.client,
+		currentUser: auth.user
   };
 }
 

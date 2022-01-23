@@ -7,8 +7,6 @@ import {
   CURRENT_USER,
 } from "../actions/types";
 
-const user = JSON.parse(localStorage.getItem("user"));
-
 const initialState = { isLoggedIn: false, user: null };
 
 function authReducer(state = initialState, action) {
@@ -16,7 +14,7 @@ function authReducer(state = initialState, action) {
   switch (type) {
     case REGISTER_SUCCESS:
       localStorage.setItem("access-token", payload.user.accessToken);
-
+      
       return {
         ...state,
         isLoggedIn: true,
@@ -44,7 +42,7 @@ function authReducer(state = initialState, action) {
     case CURRENT_USER:
       return {
         ...state,
-        isLoggedIn: true,
+        // isLoggedIn: true,
         user: payload,
       }
     case LOGOUT:
