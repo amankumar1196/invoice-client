@@ -19,7 +19,7 @@ const App = (props) => {
   const isLogged = isLoggedIn || localStorage.getItem("access-token")
 
   useEffect(()=> {
-    isLogged && props.dispatch(getCurrentUser({ include: ["address", "roles"] }))
+    isLogged && props.dispatch(getCurrentUser({ include: ["address", "roles", "companies"] }))
   },[isLogged])
 
   return (

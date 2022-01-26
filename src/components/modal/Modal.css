@@ -107,6 +107,10 @@
     .modal-dialog-centered.modal-dialog-scrollable::before {
       content: none; }
 
+    .modal-dialog-center {
+      margin: auto;
+      top: 10%;
+    }
 /* line 107, node_modules/bootstrap/scss/_modal.scss */
 .modal-content {
   position: relative;
@@ -230,10 +234,13 @@
 
 @media (min-width: 992px) {
   /* line 232, node_modules/bootstrap/scss/_modal.scss */
-  .modal-lg,
+  .modal-lg {
+    max-width: 680px;
+  }
   .modal-xl {
-    max-width: 420px; } }
-
+    max-width: 420px;
+  }
+}
 @media (min-width: 1200px) {
   /* line 239, node_modules/bootstrap/scss/_modal.scss */
   .modal-xl {
@@ -260,70 +267,93 @@
         -ms-flex-align: center;
             align-items: center; }
 
-            .close {
-              float: right;
-              font-size: 1.5rem;
-              font-weight: 700;
-              line-height: 1;
-              color: #000000;
-              text-shadow: 0 1px 0 #fff;
-              opacity: .5; }
-              /* line 13, node_modules/bootstrap/scss/mixins/_hover.scss */
-              .close:hover {
-                color: #000000;
-                text-decoration: none; }
-              /* line 17, node_modules/bootstrap/scss/mixins/_hover.scss */
-              .close:not(:disabled):not(.disabled):hover, .close:not(:disabled):not(.disabled):focus {
-                opacity: .75; }
-            
-            /* line 29, node_modules/bootstrap/scss/_close.scss */
-            button.close {
-              padding: 0;
-              background-color: transparent;
-              border: 0; }
-            
+.close {
+  float: right;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: .5; }
+  /* line 13, node_modules/bootstrap/scss/mixins/_hover.scss */
+  .close:hover {
+    color: #000000;
+    text-decoration: none; }
+  /* line 17, node_modules/bootstrap/scss/mixins/_hover.scss */
+  .close:not(:disabled):not(.disabled):hover, .close:not(:disabled):not(.disabled):focus {
+    opacity: .75; }
 
-              @media (min-width: 576px) {
-                /* line 37, src/assets/scss/pages/accounts.scss */
-                .account-modal .modal-dialog {
-                  min-width: 25rem;
-                  /* margin: 1.75rem auto; */
-                  height: 100% !important; } }
-              
-              @media (max-width: 991.98px) {
-                /* line 46, src/assets/scss/pages/accounts.scss */
-                .account-modal .modal-dialog {
-                  right: 0;
-                  bottom: 0;
-                  left: 0;
-                  height: auto;
-                  margin: 0 !important; }
-                /* line 53, src/assets/scss/pages/accounts.scss */
-                .account-modal .modal-dialog-scrollable {
-                  height: 70%;
-                  overflow-y: scroll; }
-                }
-
-                .fade {
-                  -webkit-transition: opacity 0.15s linear;
-                  transition: opacity 0.15s linear; }
-                  @media (prefers-reduced-motion: reduce) {
-                    /* line 1, node_modules/bootstrap/scss/_transitions.scss */
-                    .fade {
-                      -webkit-transition: none;
-                      transition: none; } }
-                  /* line 4, node_modules/bootstrap/scss/_transitions.scss */
-                  .fade:not(.show) {
-                    opacity: 0; }
+/* line 29, node_modules/bootstrap/scss/_close.scss */
+button.close {
+  padding: 0;
+  background-color: transparent;
+  border: 0; }
 
 
-                    .modal-footer {
-                      position: fixed;
-                      bottom: 0;
-                      width: calc(100% - 65rem);
-                      padding-top: 1rem;
-                      padding-bottom: 1.5rem;
-                      background-color: #fff;
-                      box-shadow: 0px -2px 8px rgb(87 102 117 / 10%);
-                    }
-                      
+  @media (min-width: 576px) {
+    /* line 37, src/assets/scss/pages/accounts.scss */
+    .account-modal .modal-dialog {
+      min-width: 25rem;
+      /* margin: 1.75rem auto; */
+      height: 100% !important; } }
+  
+  @media (max-width: 991.98px) {
+    /* line 46, src/assets/scss/pages/accounts.scss */
+    .account-modal .modal-dialog {
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: auto;
+      margin: 0 !important; }
+    /* line 53, src/assets/scss/pages/accounts.scss */
+    .account-modal .modal-dialog-scrollable {
+      height: 70%;
+      overflow-y: scroll; }
+    }
+
+    .fade {
+      -webkit-transition: opacity 0.15s linear;
+      transition: opacity 0.15s linear; }
+      @media (prefers-reduced-motion: reduce) {
+        /* line 1, node_modules/bootstrap/scss/_transitions.scss */
+        .fade {
+          -webkit-transition: none;
+          transition: none; } }
+      /* line 4, node_modules/bootstrap/scss/_transitions.scss */
+      .fade:not(.show) {
+        opacity: 0; }
+
+
+  .modal-footer {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 65rem);
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+    background-color: #fff;
+    box-shadow: 0px -2px 8px rgb(87 102 117 / 10%);
+  }
+
+  .welcome-modal .modal-content {
+    background-color: #f9fafe;
+
+  }
+  .welcome-modal .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 999;
+  }
+
+  .welcome-modal .close:hover {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .welcome-modal .modal-body {
+    padding: 32px;
+  }
+
+  .welcome-modal .illustration {
+    width: 300px;
+  }

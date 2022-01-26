@@ -23,6 +23,7 @@
   right: 8px;
   color: #fff;
   opacity: 0.8;
+  font-size: 16px;
 }
 .alert .toastr-progress {
   position: absolute;

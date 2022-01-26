@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { connect } from "react-redux";
 import Header from '../header/header';
 import Sidebar from '../sidebar/sidebar';
+import WelcomeModal from './WelcomeModal';
 
 function Layout(props) {
     const [isNavOpen, toggleNav] = useState(true);
@@ -16,6 +17,7 @@ function Layout(props) {
             <Outlet />
           </div>
         </main>
+        <WelcomeModal />
       </div>
     );
 }

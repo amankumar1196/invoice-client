@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
 import { connect } from "react-redux";
 import "./createInvoice.css";
 import {useRef, useState, useEffect} from "react"
@@ -8,9 +8,12 @@ import { createInvoice } from "../../redux/actions/invoiceActions"
 import InvoiceItemsForm from "./components/InvoiceItemForm";
 import ClientForm from "./components/ClientForm";
 import CompanyForm from "./components/CompanyForm";
+import moment from 'moment';
+import { setToastr } from '../../redux/actions/ToastrMessageActions';
 
 function CreateInvoice(props) {
 	const { currentUser } = props;
+	const history = useNavigate();
 	const [isDrop, setDropState] = useState(false)
 	const [file, setFile] = useState(null)
 	const [globalFormValues, setGlobalFormValues] = useState({
@@ -101,6 +104,29 @@ function CreateInvoice(props) {
   //   }
   //   return errors;
   // };
+
+	const validateInvoiceStepsForm = async () => {
+		let errors = [];
+		let firstJump = false;
+		if(!globalFormValues.client.id) {
+			if(!firstJump) firstJump = "client"
+			errors.push("Client details not provided")
+		}
+		if(globalFormValues.invoiceItems.name.length === 0) {
+			if(!firstJump) firstJump = "invoiceItems"
+			errors.push("Invoice name not provided")
+		}
+		// if(globalFormValues.invoiceItems.invoiceItems.length === 0) {
+		// 	if(!firstJump) firstJump = "invoiceItems"
+		// 	errors.push("Invoice atleast have one item")
+		// }
+
+		firstJump && setActiveStep({invoiceItems: firstJump === "invoiceItems", client: firstJump === "client", company: firstJump === "company"})
+		if(errors.length > 0) { return props.dispatch(setToastr(errors, "danger")) };
+
+		await props.dispatch(createInvoice({...globalFormValues.invoiceItems, clientId: globalFormValues.client.id}));
+		history("/invoices")
+	}
 
   return (
 		<div>
@@ -236,7 +262,7 @@ function CreateInvoice(props) {
 								</div>
 							</div>
 							<div class="text-right">
-								<button class="btn btn-outline-primary mr-8" type="submit" onClick={() => globalFormValues.client.id && props.dispatch(createInvoice({...globalFormValues.invoiceItems, clientId: globalFormValues.client.id}))}>Save</button>
+								<button class="btn btn-outline-primary mr-8" type="submit" onClick={() => validateInvoiceStepsForm()}>Save as Draft</button>
 								<button class="btn btn-primary ml-8">Save and Send</button>
 							</div>
 						</div>
@@ -251,92 +277,59 @@ function CreateInvoice(props) {
 										</svg>
 									</div>
 									<div class="company-details-wrapper d-flex">
-										<div class="left">
-											<div class="details-item">
-												<span>Client</span>
-												<p>Accenture Pvt. Ltd.</p>
-											</div>
-											<div class="details-item">
-												<span>Phone No.</span>
-												<p>8976134548</p>
-											</div>
-											<div class="details-item">
-												<span>Email</span>
-												<p>abc@accenture.co</p>
-											</div>
-										</div>
-										<div class="right">
-											<div class="details-item">
-												<span>Address 1</span>
-												<p>234-F</p>
-											</div>
-											<div class="details-item">
-												<span>Address 2</span>
-												<p>Phase 2, Tower</p>
-											</div>
-											<div class="d-flex justify-content-between">
-												<div class="details-item mr-8">
-													<span>State</span>
-													<p>Gurugram</p>
-												</div>
-												<div class="details-item ml-8">
-													<span>Country</span>
-													<p>India</p>
-												</div>
-											</div>
-											
-										</div>
+										
 									</div>
 								</div>
-								
-								<div class="total-wrapper">
-									<span>Total Amount</span>
-									<span>$300.00</span>
-								</div>
+
+								{/* <div className="client-details-wrapper invoice-details">
+									<div class="details-item mr-16">
+										<span>Invoice No.</span>
+										<p>12356</p>
+									</div>
+									<div class="details-item ml-16">
+										<span>Invoice Date</span>
+										<p>{moment().format("DD MMM, yyyy")}</p>
+									</div>
+								</div> */}
 
 								<div class="client-details-wrapper">
 									<div class="left">
+										<label className="fs-12 fw-6">Bill From</label>
 										<div class="details-item">
-											<span>Client</span>
-											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.name}</p>
+											<span>Company</span>
+											<p>{companyRef.current && companyRef.current.values && companyRef.current.values.name}</p>
+											<p>{companyRef.current && companyRef.current.values && companyRef.current.values.phone}</p>
+											<p>{companyRef.current && companyRef.current.values && companyRef.current.values.email}</p>
 										</div>
 										<div class="details-item">
-											<span>Phone No.</span>
-											{/* <p>9011134567</p> */}
-											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.phone}</p>
-										</div>
-										<div class="details-item">
-											<span>Email</span>
-											{/* <p>abc@bluebash.co</p> */}
-											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.email}</p>
+											<span>Address</span>
+											<p>{companyRef.current && companyRef.current.values && companyRef.current.values.address.address_line_1}</p>
+											<p>{companyRef.current && companyRef.current.values && companyRef.current.values.address.address_line_2}</p>
+											<p>{companyRef.current && companyRef.current.values && companyRef.current.values.address.state}</p>
+											<p>{companyRef.current && companyRef.current.values && companyRef.current.values.address.country}</p>
 										</div>
 									</div>
 									<div class="right">
+										<label className="fs-12 fw-6">Bill To</label>
 										<div class="details-item">
-											<span>Address 1</span>
-											{/* <p>Atrim-45, Quack City</p> */}
+											<span>Client</span>
+											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.name}</p>
+											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.phone}</p>
+											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.email}</p>
+										</div>
+										<div class="details-item">
+											<span>Address</span>
 											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.address_line_1}</p>
-										</div>
-										<div class="details-item">
-											<span>Address 2</span>
-											{/* <p>Phase 8B, Mohali, Punjab</p> */}
 											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.address_line_2}</p>
+											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.state}</p>
+											<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.country}</p>
 										</div>
-										<div class="d-flex justify-content-between">
-											<div class="details-item mr-8">
-												<span>State</span>
-												{/* <p>Mohali</p> */}
-												<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.state}</p>
-											</div>
-											<div class="details-item ml-8">
-												<span>Country</span>
-												{/* <p>India</p> */}
-												<p>{clientRef.current && clientRef.current.values && clientRef.current.values.address.country}</p>
-											</div>
-										</div>
-										
 									</div>
+								</div>
 
+								<div class="total-wrapper">
+									<span>Total Amount</span>
+									<span>$300.00</span>
 								</div>
 
 								<table>
@@ -354,9 +347,9 @@ function CreateInvoice(props) {
 												<td>
 													<p class="invoice-name">{item.description}</p>
 												</td>
-												<td>$100.00</td>
+												<td>${item.price}</td>
 												<td>{item.quantity}</td>
-												<td>$200.00</td>
+												<td>${(item.price * item.quantity).toFixed(2)}</td>
 											</tr>
 										)}
 									</tbody>

@@ -70,6 +70,8 @@
 	color: #fff;
 	padding: 0.75rem 1.5rem;
 	font-weight: 500;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
 }
 .preview-content .total-wrapper span:first-child {
 	font-size: 0.875rem;

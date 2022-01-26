@@ -41,7 +41,7 @@ function CompanyForm(props) {
     address: {
       address_line_1: "",
       address_line_2: "",
-      country: "United States",
+      country: "",
       state: ""
     },
     userId: 1,
@@ -76,7 +76,7 @@ function CompanyForm(props) {
 
         {({values}) => {
           values != globalFormValues.company && setGlobalFormValues({...globalFormValues, company: values})
-          const states = countries.find(item => values.address.country === item.name).states;
+          const states = values.address.country && countries.find(item => values.address.country === item.name).states;
           return (
             <Form>
               {/* Invoice sections Client */}
@@ -154,7 +154,7 @@ function CompanyForm(props) {
 
                     <SelectField label="State" name="address.state" wrapperClass="form-group w-100 pl-16">
                       <option value=""></option>
-                      {states.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
+                      {states && states.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
                     </SelectField>
                   </div>
 

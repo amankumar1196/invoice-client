@@ -1,4 +1,5 @@
 import apiHandler from "../../utils/apiCaller";
+import { setToastr } from "./ToastrMessageActions";
 
 import {
   CREATE_INVOICE,
@@ -18,8 +19,10 @@ export const createInvoice = (data, filters) => async (dispatch) => {
       payload: res.data,
     });
 
+    dispatch(setToastr("Invoice Created Successfully", "success"))
     return Promise.resolve(res.data);
   } catch (err) {
+    dispatch(setToastr(err.response.message, "danger"))
     return Promise.reject(err);
   }
 };
@@ -31,7 +34,7 @@ export const retrieveInvoices = (filters) => async (dispatch) => {
     dispatch({
       type: RETRIEVE_INVOICES,
       payload: res.data,
-    });
+    });    
   } catch (err) {
     console.log(err);
   }

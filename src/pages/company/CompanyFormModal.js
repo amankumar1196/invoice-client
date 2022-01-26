@@ -1,4 +1,4 @@
-// import "./Company.css";
+import "../../components/modal/Modal.css";
 import { connect } from "react-redux";
 import ModalPortal from "../../components/modal/ModalPortal";
 
@@ -60,7 +60,7 @@ function CompanyForm(props) {
                   const states = countries.find(item => values.address.country === item.name).states;
                   return (
                     <Form>
-                      <div class="modal-header pt-24 px-24 border-bottom-0 d-flex align-items-center">
+                      <div class="modal-header pt-24 px-24 d-flex align-items-center">
                         <h3 class="text-neutral-900 mb-0" id="exampleModalLabel">{companyEditingId !== "new" ? "Update" : "Create"} Company</h3>
                         <div class="cross-modal-icon curser-pointer close mr-8" onClick={() => props.dispatch(companyEditing(false))} data-dismiss="modal" aria-label="Close"><i class="bx bx-x text-neutral-900 font-size-24"></i></div>
                       </div>

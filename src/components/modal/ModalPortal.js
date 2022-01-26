@@ -1,6 +1,5 @@
 import ReactDOM from 'react-dom';
 import { useState, useEffect } from "react";
-import "./Modal.css";
 
 const Portal = ({ children }) => {
   const [modalContainer] = useState(document.createElement('div'));

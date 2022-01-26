@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import "./Toastr.css";
 import { clearToastr } from '../../redux/actions/ToastrMessageActions';
+import { isArray } from 'lodash';
 
 const Toastr = (props) => {
   const { alerts, dispatch } = props
@@ -27,9 +28,15 @@ const Toastr = (props) => {
     <div className="alert-wrapper">
       {alerts.map((alert) => (
         <div key={alert.id} className={`alert alert-${alert.alertType}`}>
-          <div className="d-flex align-items-center">
-            {<i class={`bx bx-${getIcon(alert.alertType)} fs-20 mr-8`}></i>}
-            {alert.msg}
+          <div className="d-flex align-items-start">
+            {<i class={`bx bx-${getIcon(alert.alertType)} fs-20 mr-16`}></i>}
+            {isArray(alert.msg) ?
+              <div class="d-block">
+                { alert.msg.length > 1 ? alert.msg.map((text, index) => <p>{index+1}. {text}</p>) : alert.msg[0] }
+              </div>
+              :
+              alert.msg
+            }
           </div>
           <i className="bx bx-x close" onClick={() => dispatch(clearToastr(alert.id))}></i>
           <div className="toastr-progress">
