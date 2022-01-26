@@ -36,6 +36,13 @@ function Sidebar(props) {
           <span class="tooltip">Clients</span>
         </li>
         <li>
+          <NavLink to="/members">
+            <i class='bx bx-user' ></i>
+            <span class="links_name">Members</span>
+          </NavLink>
+          <span class="tooltip">Members</span>
+        </li>
+        <li>
           <NavLink to="/analytics">
             <i class='bx bx-pie-chart-alt-2' ></i>
             <span class="links_name">Analytics</span>

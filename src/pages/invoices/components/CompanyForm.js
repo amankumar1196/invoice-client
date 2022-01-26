@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { InputField, SelectField } from '../../../components/form';
 import countries from "../../../utils/countries";
 import { retrieveCompanies, getCompany, createCompany, updateCompany, companyEditing } from '../../../redux/actions/companyActions';
-import CompanyFormModal from '../../company/CompanyFormModal';
+import CompanyFormModal from '../../organizations/CompanyFormModal';
 
 function CompanyForm(props) {
   const { globalFormValues, setGlobalFormValues, invoiceRef, activeSections, setActiveSections, companies, company} = props
