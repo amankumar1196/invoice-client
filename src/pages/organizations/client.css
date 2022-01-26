@@ -1,0 +1,263 @@
+.invoice-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .invoice-page-header-left {
+    display: flex;
+    align-items: center;
+  }
+  .invoice-page-header-left a {
+    color: #58555E;
+    font-size: 0.875rem;
+  }
+  .invoice-page-header-left .invoice-create {
+    display: flex;
+    align-items: center;
+    margin-left: 2rem;
+    cursor: pointer;
+  }
+  .invoice-page-header-left .invoice-create i {
+    padding-right: 0.5rem;
+  
+  }
+  .invoice-page-header-right .header__search {
+    background-color: white;
+    position: relative;
+    padding-left: 2rem;
+    width: 400px;
+  }
+  .invoice-page-header-right .header__search .header__input{
+    background-color: white;
+  }
+  .invoice-page-header-right .header__search .header__icon{
+    position: absolute;
+    left: 8px;
+    top: 30%;
+    font-size: 1rem;
+  }
+  
+  table {
+    border-collapse: separate;
+    border-spacing: 0 1rem;
+    /* box-shadow: 0 5px 10px #e1e5ee; */
+    /* background-color: white; */
+    text-align: left;
+    /* overflow: hidden; */
+    width: 100%;
+    padding: 0 2px;
+  }
+  
+  thead tr{
+      /* box-shadow: 0 5px 10px #e1e5ee; */
+      background-color: #f9fafe;
+  
+    }
+    thead tr td {
+      display: flex;
+      align-items: center;
+    }
+    thead tr i {
+      padding-left: 0.5rem;
+      font-size: 0.75rem;
+      color: #c0c2c8;
+    }
+  
+    th {
+      padding: 1rem 2rem;
+      /* text-transform: uppercase; */
+      /* letter-spacing: 0.1rem; */
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+  
+  
+  tbody tr {
+    /* box-shadow: 0 5px 10px #e1e5ee; */
+    outline: solid thin #fbfdff;
+  }
+  
+  .invoice-page-wrapper tbody tr:hover {
+      /* box-shadow: 0 5px 10px #e1e5ee; */
+      outline: solid 2px #3a67d9;
+      border-radius: 4px;
+    }
+    td {
+      padding: 0.75rem 2rem;
+    }
+  
+    a {
+      text-decoration: none;
+      color: #2962ff;
+    }
+  
+    .status {
+      border-radius: 0.2rem;
+      background-color: red;
+      padding: 0.2rem 1rem;
+      text-align: center;
+    }
+  
+    .status-pending {
+      background-color: #fff0c2;
+      color: #a68b00;
+    }
+    .status-paid {
+      background-color: #c8e6c9;
+      color: #388e3c;
+    }
+    .status-unpaid {
+      background-color: #ffcdd2;
+      color: #c62828;
+    }
+  
+    .amount {
+      text-align: right;
+    }
+  
+    tr {
+        background-color: #fbfdff;
+    }
+    /* tr:nth-child(even) {
+      background-color: #f3f6fd;
+    } */
+  
+    .invoice-icon {
+      font-size: 2rem;
+      color: #3a67d9;
+    }
+    .action-icon {
+      font-size: 1.5rem;
+      border: 2px solid #cacfd5;
+      border-radius: 6px;
+    }
+  
+    tr:hover .action-icon {
+      background-color: #3a67d9;
+      color: #fbfdff;
+      border: 2px solid #3a67d9;
+    }
+  
+    .select-box {
+      display: flex;
+      align-items: center;
+    }
+  
+    .checkbox-container {
+      display: block;
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      /* font-size: 22px; */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    thead th .checkbox-container {
+      margin-bottom: 0px;
+    }
+    /* Hide the browser's default checkbox */
+    .checkbox-container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+    
+    /* Create a custom checkbox */
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 16px;
+      width: 16px;
+      border-radius: 4px;
+      background-color: #e0eafd;
+    }
+    
+    /* On mouse-over, add a grey background color */
+    /* .checkbox-container:hover input ~ .checkmark {
+      background-color: #ccc;
+    } */
+    
+    /* When the checkbox is checked, add a blue background */
+    .checkbox-container input:checked ~ .checkmark {
+      background-color: #3a67d9;
+    }
+    
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+    
+    /* Show the checkmark when checked */
+    .checkbox-container input:checked ~ .checkmark:after {
+      display: block;
+    }
+    
+    /* Style the checkmark/indicator */
+    .checkbox-container .checkmark:after {
+      left: 6px;
+      top: 4px;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+  
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px #cacfd5;
+      padding: 0.5rem;
+      z-index: 1;
+      right: -24px;
+      /* top: 40px; */
+      border-radius: 6px;
+      border: 0px solid #cacfd5;
+    }
+    
+    .dropdown-content a {
+      font-size: 14px;
+      color: #cacfd5;
+      padding: 4px 8px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .dropdown-content a i {
+      padding-right: 0.5rem;
+    }
+    .dropdown-content a:hover {
+      color: #2f3031;
+      background-color: #f9fafe;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  
+    .invoice-name {
+      font-weight: 500;
+    }
+    .invoice-number {
+      font-size: 14px;
+      color: #c1c5ca;
+      padding-top: 8px;
+    }

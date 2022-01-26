@@ -8,6 +8,8 @@ import Dashboard from './pages/dashboard'
 import Invoices from './pages/invoices'
 import CreateInvoice from './pages/invoices/CreateInvoice'
 import Clients from './pages/clients';
+// import Organizations from './pages/organizations';
+import Members from './pages/organizations';
 
 import SignInForm from './pages/Public/signIn';
 import SignUpForm from './pages/Public/signUp';
@@ -32,6 +34,7 @@ const App = (props) => {
                 <Route path="invoices" element={<Invoices />} />
                 <Route path="invoices/new" element={<CreateInvoice />} />
                 <Route path="clients" element={<Clients />} />
+                <Route path="members" element={<Members />} />
                 <Route path="/" element={<Dashboard />} />
               </Route>,
               <Route path='*' element={<Navigate to='/' />} /> ]
