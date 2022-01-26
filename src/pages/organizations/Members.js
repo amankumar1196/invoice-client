@@ -8,9 +8,7 @@ function Members(props) {
 	const { members, currentUser } = props;
 
 	useEffect(()=>{
-		debugger
 		props.dispatch(retrieveMembers({extraParams: { registerKey: currentUser.registerKey}, include: ["address"]}))
-		// props.dispatch(retrieveMembers())
 	},[])
 
 	const memberFormEdit = (id) => {

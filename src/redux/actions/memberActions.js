@@ -30,18 +30,14 @@ export const createMember = (data, filters) => async (dispatch) => {
 export const retrieveMembers = (filters) => async (dispatch) => {
   try {
 
-    debugger
-
     const res = await apiHandler("GET", "/v1/members", filters);
 
-    debugger
     dispatch({
       type: RETRIEVE_MEMBERS,
       payload: res.data,
     });
     
   } catch (err) {
-    debugger
     console.log(err);
     dispatch(setToastr(err.response.data, 'danger'));
   }
