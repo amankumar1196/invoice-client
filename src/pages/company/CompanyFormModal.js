@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { InputField, SelectField } from '../../components/form';
 import countries from "../../utils/countries";
 import { companyEditing } from '../../redux/actions/companyActions';
+import FileUpload from "../../components/form/FileUpload";
 
 function CompanyForm(props) {
   const { companyFormSubmit, company, companyEditingId, currentUser } = props
@@ -56,8 +57,8 @@ function CompanyForm(props) {
                 resetForm()
               }}>
 
-                {({values}) => {
-                  const states = countries.find(item => values.address.country === item.name).states;
+                {({values, setFieldValue}) => {
+                  const states = values.address && countries.find(item => values.address.country === item.name).states;
                   return (
                     <Form>
                       <div class="modal-header pt-24 px-24 d-flex align-items-center">
@@ -67,6 +68,11 @@ function CompanyForm(props) {
                       <div class="modal-body pt-0 px-24 pt-32">
                         <div>
                           <span className="d-block pb-16 fw-6">Basic details</span>
+                          <FileUpload 
+                            label="Add Logo"
+                            value={values.logo}
+                            onUploadHook={(file) => setFieldValue("logo", file)}
+                          />
                           <InputField
                             label="Company Name"
                             name="name"
@@ -114,7 +120,7 @@ function CompanyForm(props) {
 
                             <SelectField label="State" name="address.state" wrapperClass="form-group w-100">
                               <option value=""></option>
-                              {states.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
+                              {states && states.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
                             </SelectField>
                           {/* </div> */}
                         </div>

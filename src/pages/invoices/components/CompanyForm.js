@@ -9,13 +9,13 @@ import { InputField, SelectField } from '../../../components/form';
 import countries from "../../../utils/countries";
 import { retrieveCompanies, getCompany, createCompany, updateCompany, companyEditing } from '../../../redux/actions/companyActions';
 import CompanyFormModal from '../../company/CompanyFormModal';
+import FileUpload from '../../../components/form/FileUpload';
 
 function CompanyForm(props) {
-  const { globalFormValues, setGlobalFormValues, invoiceRef, activeSections, setActiveSections, companies, company} = props
-  const [ isSelected, setSelected ] = useState(false)
+  const { globalFormValues, setGlobalFormValues, invoiceRef, activeSections, setActiveSections, company, currentUser} = props
   
   useEffect(()=>{
-    props.dispatch(retrieveCompanies());
+    currentUser.companies.length > 0 && props.dispatch(getCompany(currentUser.companies[0].id, {registerKey: currentUser.registerKey, include: ["address"]}));
   },[])
 
   const companyFormSubmit = async (data) => {
@@ -44,8 +44,7 @@ function CompanyForm(props) {
       country: "",
       state: ""
     },
-    userId: 1,
-    registerKey: "e769143f-a099-4ef8-acf5-7295955ede59"
+    registerKey: currentUser.registerKey
   }
 
   return (
@@ -76,7 +75,7 @@ function CompanyForm(props) {
 
         {({values}) => {
           values != globalFormValues.company && setGlobalFormValues({...globalFormValues, company: values})
-          const states = values.address.country && countries.find(item => values.address.country === item.name).states;
+          const states = values.address && values.address.country && countries.find(item => values.address.country === item.name).states;
           return (
             <Form>
               {/* Invoice sections Client */}
@@ -87,45 +86,56 @@ function CompanyForm(props) {
                     <span>Company Details</span>
                   </p>
                   <div className="d-flex align-items-center">
-                    { companies.length > 0 && <div className="form-group w-100 mb-0" style={{maxWidth: "10rem"}}>
+                    { currentUser.companies.length > 1 && <div className="form-group w-100 mb-0" style={{maxWidth: "10rem"}}>
                       <div class="input-field-wrapper">
-                        <select className="form-control" value={company.id ? company.id : "null"} onChange={(e)=> e.target.value === "null" ? props.dispatch(companyEditing(false)) : props.dispatch(getCompany(e.target.value))}>
+                        <select className="form-control" value={company.id ? company.id : "null"} onChange={(e)=> e.target.value === "null" ? props.dispatch(companyEditing(false)) : props.dispatch(getCompany(e.target.value, {include: ["address"]}))}>
                           <option value=""></option>
-                          {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                          {currentUser.companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                       </div>
                     </div> }
-                    <button className="btn btn-sm btn-outline-primary ml-16" type="button" onClick={() => props.dispatch(companyEditing(company.id ? company.id : "new"))}>
-                      Create New
-                    </button>
+                    { currentUser.userRoles.indexOf("ROLE_ADMIN") > -1 && 
+                      <button className="btn btn-sm btn-outline-primary ml-16" type="button" onClick={() => props.dispatch(companyEditing(company.id ? company.id : "new"))}>
+                        Create New
+                      </button>
+                    }
                     {/* <i class={`bx fs-24 ${!activeSections.company ? "bx-chevron-right" : "bx-chevron-down"}`} onClick={()=> setActiveSections({...activeSections, company: !activeSections.company})}></i> */}
                   </div>
                 </div>
               </button>
               <div class={`panel ${activeSections.company && "active"}`}>
-                <div>
-                  <InputField
-                    label="Company Name"
-                    name="name"
-                    type="text"
-                    placeholder=""
-                  />
-                  <div class="d-flex w-100">
-                    <InputField
-                      label="Email Address"
-                      name="email"
-                      type="email"
-                      placeholder=""
-                      wrapperClass="form-group w-100 pr-16"
-                    />
+                <div class="pt-16">
+                  <div class="d-flex">
+                    <div class="d-flex flex-column w-50 pr-16">
+                      <InputField
+                        label="Company Name"
+                        name="name"
+                        type="text"
+                        placeholder=""
+                        disabled
+                      />
+                      <InputField
+                        label="Email Address"
+                        name="email"
+                        type="email"
+                        placeholder=""
+                        wrapperClass="form-group w-100"
+                        disabled
+                      />
 
-                    <InputField
-                      label="Phone"
-                      name="phone"
-                      type="number"
-                      placeholder=""
-                      wrapperClass="form-group w-100 pl-16"
-                    />
+                      <InputField
+                        label="Phone"
+                        name="phone"
+                        type="number"
+                        placeholder=""
+                        wrapperClass="form-group w-100"
+                        disabled
+                      />
+                    </div>
+                    <div class="w-50 pl-16 form-group d-flex flex-column">
+                      <FileUpload key={values.logo} label="Logo" value={values.logo} onlyPlaceholder disabled/>
+                      {/* <img class="uploaded-file"  style={{maxHeight: "120px"}} src={company.logo} /> */}
+                    </div>
                   </div>
 
                   <div class="d-flex w-100">
@@ -135,6 +145,7 @@ function CompanyForm(props) {
                       type="text"
                       placeholder=""
                       wrapperClass="form-group w-100 pr-16"
+                      disabled
                     />
 
                     <InputField
@@ -143,16 +154,17 @@ function CompanyForm(props) {
                       type="text"
                       placeholder=""
                       wrapperClass="form-group w-100 pl-16"
+                      disabled
                     />
                   </div>
 
                   <div class="d-flex w-100">
-                    <SelectField label="Country" name="address.country" wrapperClass="form-group w-100 pr-16">
+                    <SelectField disabled label="Country" name="address.country" wrapperClass="form-group w-100 pr-16">
                       <option value=""></option>
                       {countries.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                     </SelectField>
 
-                    <SelectField label="State" name="address.state" wrapperClass="form-group w-100 pl-16">
+                    <SelectField disabled label="State" name="address.state" wrapperClass="form-group w-100 pl-16">
                       <option value=""></option>
                       {states && states.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
                     </SelectField>
@@ -171,11 +183,11 @@ function CompanyForm(props) {
 }
 
 function mapStateToProps(state) {
-  const { message } = state.toastrMessage;
-  const { company } = state;
+  const { company, auth } = state;
   return {
     companies: company.companies,
-    company: company.company
+    company: company.company,
+    currentUser: auth.user
   };
 }
 

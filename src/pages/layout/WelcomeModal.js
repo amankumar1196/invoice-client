@@ -12,8 +12,10 @@ function WelcomeModal(props) {
 
   useEffect(() => {
     let onBoardingModal = JSON.parse(sessionStorage.getItem("onBoardingModal"));
-    if(!onBoardingModal && companies && companies.length === 0) setTimeout(()=> setVisible(true), 1000); 
-  },[])
+    if(!onBoardingModal && companies && companies.length === 0) {
+      setTimeout(()=> setVisible(true), 1000)
+    } else setVisible(false); 
+  },[companies])
 
   const handleBoardingModalClose = () => {
     sessionStorage.setItem("onBoardingModal", true);
