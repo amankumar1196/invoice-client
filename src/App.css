@@ -466,6 +466,9 @@ p {
 .mr-16 {
   margin-right: 16px;
 }
+.mr-32 {
+  margin-right: 32px;
+}
 .mb-32 {
   margin-bottom: 2rem;
 }
@@ -491,4 +494,11 @@ p {
 
 .border-bottom-0 {
   border-bottom: 0 !important;
+}
+
+.truncate {
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

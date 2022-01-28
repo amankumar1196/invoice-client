@@ -93,7 +93,7 @@ function CreateInvoice(props) {
 					<div class="create-invoice-header mb-24">
 						<h1>Create Invoices</h1>
 						<NavLink to="/invoices">
-							<p class="invoice-create">
+							<p class="page-create-button">
 								<i class='bx bx-notepad mr-8'></i>
 								Invoice List
 							</p>

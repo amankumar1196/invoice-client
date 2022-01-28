@@ -12,13 +12,13 @@
   color: #58555E;
   font-size: 0.875rem;
 }
-.invoice-page-header-left .invoice-create {
+.invoice-page-header-left .page-create-button {
   display: flex;
   align-items: center;
   margin-left: 2rem;
   cursor: pointer;
 }
-.invoice-page-header-left .invoice-create i {
+.invoice-page-header-left .page-create-button i {
   padding-right: 0.5rem;
 
 }

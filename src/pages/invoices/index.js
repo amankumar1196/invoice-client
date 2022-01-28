@@ -25,7 +25,7 @@ function Invoices(props) {
 				<div class="invoice-page-header-left">
 					<h1>Invoices</h1>
 					<NavLink to="/invoices/new">
-						<p class="invoice-create">
+						<p class="page-create-button">
 							<i class='bx bx-plus-circle'></i>
 							Create
 						</p>

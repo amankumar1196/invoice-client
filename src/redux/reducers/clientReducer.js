@@ -11,6 +11,7 @@ import {
 const initialState = {
   clients: [],
   client: {},
+  pagination: {},
   editing: false
 };
 
@@ -22,7 +23,12 @@ function clientReducer(state = initialState, action) {
       return { ...state, clients: [ ...state.clients, payload ], editing: false };
 
     case RETRIEVE_CLIENTS:
-      return {...state, clients: payload};
+      return { 
+        ...state,
+        clients: payload.data,
+        pagination: payload.pagination,
+        editing: false
+      };
     
     case GET_CLIENT:
       return {...state, client: payload};
