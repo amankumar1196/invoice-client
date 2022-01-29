@@ -11,14 +11,14 @@ import { retrieveClients, getClient, createClient, updateClient, clientEditing }
 import ClientFormModal from '../../clients/ClientFormModal';
 
 function ClientForm(props) {
-  const { globalFormValues, setGlobalFormValues, invoiceRef, activeSections, setActiveSections, clients, client} = props
+  const { globalFormValues, setGlobalFormValues, invoiceRef, activeSections, setActiveSections, clients, client, filters} = props
   const [ isSelected, setSelected ] = useState(false)
   useEffect(()=>{
     console.log(globalFormValues);
   })
 
   useEffect(()=>{
-    props.dispatch(retrieveClients());
+    props.dispatch(retrieveClients(filters));
   },[])
 
   let initialValues= null
@@ -178,10 +178,11 @@ function ClientForm(props) {
 }
 
 function mapStateToProps(state) {
-  const { client } = state;
+  const { client, filters } = state;
   return {
     clients: client.clients,
-    client: client.client
+    client: client.client,
+    filters
   };
 }
 

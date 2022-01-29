@@ -1,13 +1,17 @@
 import { debounce } from 'lodash';
-import React from 'react'
+import React, { useCallback } from 'react'
 import { connect } from 'react-redux'
 
 const Search = (props) => {
   const { filters, searchHook, placeholder } = props;
-  
-  const onSearchChange = (filter) => {
-    let debounceFun =debounce(()=>searchHook({...filters, ...filter}),2000)
-    debounceFun();
+
+  const debouncedCallback = useCallback(
+		debounce(val => searchHook(val), 1500),
+		[], // will be created only once initially
+	);
+
+  const onSearchChange = (search) => {
+		debouncedCallback({...filters, ...search});
   }
 
   return(
