@@ -75,21 +75,38 @@ export const updateInvoice = (data, filters) => async (dispatch) => {
   }
 };
 
-export const deleteInvoice = (id) => async (dispatch) => {
+export const deleteInvoice = (data, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.delete(`/tutorials/${id}`);
+    const res = await apiHandler("delete", `/v1/invoices/${data.id}`, filters, data);
 
     dispatch({
-      type: DELETE_INVOICE,
-      payload: { id },
+      type: UPDATE_INVOICE,
+      payload: res.data,
     });
 
+    dispatch(setToastr(`Invoice ${data.archived ? "Archived" : "Restored"} Successfully`, "success"))
     return Promise.resolve(res.data);
   } catch (err) {
-    console.log(err);
+    dispatch(setToastr(err.response.message, "danger"))
     return Promise.reject(err);
   }
 };
+
+// export const deleteInvoice = (id) => async (dispatch) => {
+//   try {
+//     const res = await apiHandler.delete(`/tutorials/${id}`);
+
+//     dispatch({
+//       type: DELETE_INVOICE,
+//       payload: { id },
+//     });
+
+//     return Promise.resolve(res.data);
+//   } catch (err) {
+//     console.log(err);
+//     return Promise.reject(err);
+//   }
+// };
 
 export const deleteAllInvoices = () => async (dispatch) => {
   try {

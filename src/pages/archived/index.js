@@ -1,25 +1,21 @@
-import "./invoices.css";
-import {NavLink, useNavigate} from 'react-router-dom';
+import "../invoices/invoices.css";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { startCase } from "lodash";
 import moment from "moment";
-import { retrieveInvoices, getAllInvoicesIds, invoiceEditing, getInvoice, deleteInvoice } from "../../redux/actions/invoiceActions";
+import { retrieveInvoices, getAllInvoicesIds, deleteInvoice } from "../../redux/actions/invoiceActions";
 import Search from "../../components/search/Search";
 import Pagination from "../../components/pagination/Pagination";
 import { clearFilter, setFilter } from "../../redux/actions/filterActions";
 import Table from "../../components/table/Table";
 import {MultiSelectDropdown} from "../../components/form";
-import { getClient } from "../../redux/actions/clientActions";
-import { getCompany } from "../../redux/actions/companyActions";
 
-function Invoices(props) {
+function ArchivedInvoices(props) {
 	const { currentUser, filters, pagination, invoices } = props;
 	const [ invoiceIds, setInvoiceIds ] = useState([]);
-	const history = useNavigate();
 
 	useEffect(()=> {
-		getInvoices({...filters, extraParams: { registerKey: currentUser.registerKey, archived: 0 }, include: [ "client" ]})
+		getInvoices({...filters, extraParams: { registerKey: currentUser.registerKey, archived: 1 }, include: [ "client" ]})
 		return () => props.dispatch(clearFilter());
 	},[])
 
@@ -28,16 +24,6 @@ function Invoices(props) {
 		props.dispatch(setFilter(filters))
 	}
 	
-	const clientFormEdit = async (id) => {
-		if(id !== "new"){
-			const invoice = await props.dispatch(getInvoice(id, {include: ["invoice_items"]}))
-			props.dispatch(getClient(invoice.clientId, {include: ["address"]}))
-			props.dispatch(getCompany(invoice.companyId, {include: ["address"]}))
-		}
-		await props.dispatch(invoiceEditing(id));
-		history(`/invoices/${id}`)
-	}	
-
 	const onInvoiceDelete = (data) => {
 		props.dispatch(deleteInvoice(data))
 	}
@@ -71,13 +57,7 @@ function Invoices(props) {
 		<div class="invoice-page-wrapper">
 			<div class="invoice-page-header">
 				<div class="invoice-page-header-left">
-					<h1>Invoices</h1>
-					<NavLink to="/invoices/new">
-						<p class="page-create-button">
-							<i class='bx bx-plus-circle'></i>
-							Create
-						</p>
-					</NavLink>
+					<h1>Archived</h1>
 				</div>
 				<Search
 					filters={filters}
@@ -85,7 +65,6 @@ function Invoices(props) {
 					placeholder="Search invoices by invoice/client name"
 				/>
 			</div>
-			
 
 			<Table
 				columns={[
@@ -114,43 +93,41 @@ function Invoices(props) {
 					{name: "Actions"}
 				]}
 			>
-				{ props.invoices.map(invoice =>
-					!invoice.archived && 
-						<tr key={`invoice-${invoice.id}`}>
-							<td>
-								<div class="select-box">
-									<label class="checkbox-container">
-										<input type="checkbox" checked={invoiceIds.includes(invoice.id)} onClick={() => onInvoicSelect(invoice.id)}/>
-										<span class="checkmark"></span>
-									</label>
-									<i class='bx bx-file invoice-icon'></i>
-								</div>
-							</td>
-							<td>
-								<p class="invoice-name truncate">{invoice.name}</p>
-								<span class="invoice-number">Invoice no. {invoice.id}</span>
-							</td>
-							<td>$100.00</td>
-							<td>{invoice.client && invoice.client.name}</td>
-							<td>
-								<p class={`status ${getStatusClass(invoice.status)}`}>{startCase(invoice.status)}</p>
-							</td>
-							<td>{moment(invoice.createdAt).format('hh:mm MM.DD.YYYY')}</td>
-							<td>{moment(invoice.updatedAt).startOf('second').fromNow()}</td>
-							<td>
-								<div class="dropdown">
-									<span>
-										<i class='bx bx-dots-horizontal-rounded action-icon'></i>
-									</span>
-									<div class="dropdown-content">
-										<a onClick={() => clientFormEdit(invoice.id)}><i class='bx bx-edit'></i>Edit</a>
-										<a><i class='bx bx-mail-send'></i>Re Send</a>
-										<a><i class='bx bx-download'></i>Download</a>
-										<a onClick={() => onInvoiceDelete({ id: invoice.id, archived: true })}><i class='bx bx-archive'></i>Archive</a>
-									</div>
-								</div>
-							</td>
-						</tr>
+				{ invoices.map(invoice =>
+          invoice.archived && <tr key={`invoice-${invoice.id}`}>
+            <td>
+              <div class="select-box">
+                <label class="checkbox-container">
+                  <input type="checkbox" checked={invoiceIds.includes(invoice.id)} onClick={() => onInvoicSelect(invoice.id)}/>
+                  <span class="checkmark"></span>
+                </label>
+                <i class='bx bx-file invoice-icon'></i>
+              </div>
+            </td>
+            <td>
+              <p class="invoice-name truncate">{invoice.name}</p>
+              <span class="invoice-number">Invoice no. {invoice.id}</span>
+            </td>
+            <td>$100.00</td>
+            <td>{invoice.client && invoice.client.name}</td>
+            <td>
+              <p class={`status ${getStatusClass(invoice.status)}`}>{startCase(invoice.status)}</p>
+            </td>
+            <td>{moment(invoice.createdAt).format('hh:mm MM.DD.YYYY')}</td>
+            <td>{moment(invoice.updatedAt).startOf('second').fromNow()}</td>
+            <td>
+              <div class="dropdown">
+                <span>
+                  <i class='bx bx-dots-horizontal-rounded action-icon'></i>
+                </span>
+                <div class="dropdown-content">
+                  <a><i class='bx bx-edit'></i>View</a>
+                  <a><i class='bx bx-download'></i>Download</a>
+                  <a onClick={() => onInvoiceDelete({ id: invoice.id, archived: false })}><i class='bx bx-archive'></i>Restore</a>
+                </div>
+              </div>
+            </td>
+          </tr>
 				)}
 			</Table>
 			<Pagination filters={filters} pagination={pagination} currentTotalRecords={invoices.length} filterHook={(filters) => getInvoices(filters)} />
@@ -168,4 +145,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Invoices);
+export default connect(mapStateToProps)(ArchivedInvoices);

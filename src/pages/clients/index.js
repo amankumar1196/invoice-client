@@ -13,7 +13,7 @@ function Clients(props) {
 	const { clients, currentUser, filters, pagination } = props;
 
 	useEffect(()=>{
-		getClients({...filters, extraParams: { ...filters.extraParams, registerKey: currentUser.registerKey}, include: ["address"]})
+		getClients({...filters, extraParams: { registerKey: currentUser.registerKey}, include: ["address"]})
 		return () => {
 			props.dispatch(clearFilter());
 		}

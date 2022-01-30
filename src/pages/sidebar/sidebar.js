@@ -43,7 +43,7 @@ function Sidebar(props) {
           <span class="tooltip">Analytics</span>
         </li>
         <li>
-          <NavLink to="/archive">
+          <NavLink to="/archived">
             <i class='bx bx-archive' ></i>
             <span class="links_name">Archive</span>
           </NavLink>

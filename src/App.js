@@ -8,6 +8,7 @@ import Dashboard from './pages/dashboard'
 import Invoices from './pages/invoices'
 import CreateInvoice from './pages/invoices/CreateInvoice'
 import Clients from './pages/clients';
+import Archived from './pages/archived';
 
 import SignInForm from './pages/Public/signIn';
 import SignUpForm from './pages/Public/signUp';
@@ -33,6 +34,7 @@ const App = (props) => {
                 <Route path="invoices/new" element={<CreateInvoice />} />
                 <Route path="invoices/:id" element={<CreateInvoice />} />
                 <Route path="clients" element={<Clients />} />
+                <Route path="archived" element={<Archived />} />
                 <Route path="/" element={<Dashboard />} />
               </Route>,
               <Route path='*' element={<Navigate to='/' />} /> ]
