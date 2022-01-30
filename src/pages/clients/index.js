@@ -1,4 +1,4 @@
-import "./Client.css";
+import "./client.css";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { deleteClient, retrieveClients, clientEditing, createClient, updateClient, getClient } from "../../redux/actions/clientActions";
