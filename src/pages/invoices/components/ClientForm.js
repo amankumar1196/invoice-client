@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react';
-import {NavLink} from 'react-router-dom';
 import { connect } from "react-redux";
-import {useRef, useState, useEffect} from "react"
-import { Formik, Form, FieldArray } from 'formik';
+import { useEffect } from "react"
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
 import { InputField, SelectField } from '../../../components/form';
@@ -11,17 +10,12 @@ import { retrieveClients, getClient, createClient, updateClient, clientEditing }
 import ClientFormModal from '../../clients/ClientFormModal';
 
 function ClientForm(props) {
-  const { globalFormValues, setGlobalFormValues, invoiceRef, activeSections, setActiveSections, clients, client, filters} = props
-  const [ isSelected, setSelected ] = useState(false)
-  useEffect(()=>{
-    console.log(globalFormValues);
-  })
+  const { globalFormValues, setGlobalFormValues, clients, client, filters, currentUser, dispatch } = props
 
   useEffect(()=>{
-    props.dispatch(retrieveClients(filters));
+    dispatch(retrieveClients({...filters, extraParams: { ...filters.extraParams, registerKey: currentUser.registerKey}, include: [ "address" ]}));
+    return () => dispatch(clientEditing(false));
   },[])
-
-  let initialValues= null
 
   const clientFormSubmit = async (data) => {
     let clientId;
@@ -34,6 +28,7 @@ function ClientForm(props) {
     props.dispatch(getClient(clientId.id))
   }
 
+  let initialValues= null
   if(client && client.id){
     initialValues={
       ...client
@@ -53,7 +48,6 @@ function ClientForm(props) {
   return (
     <Fragment>
       <Formik
-        innerRef={invoiceRef}
         enableReinitialize
         initialValues={{
           ...initialValues
@@ -68,21 +62,14 @@ function ClientForm(props) {
           phone: Yup.string()
             .required('Required'),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          props.dispatch(createClient(values))
-          // setTimeout(() => {
-          //   alert(JSON.stringify(values, null, 2));
-          //   setSubmitting(false);
-          // }, 400);
-        }}>
-
+      >
         {({values}) => {
           values != globalFormValues.client && setGlobalFormValues({...globalFormValues, client: values})
           const states = values.address.country && countries.find(item => values.address.country === item.name).states;
+
           return (
             <Form>
-              {/* Invoice sections Client */}
-              <button type="button" class={`accordion ${!activeSections.client && "mb-16"}`}>
+              <button type="button" class={`accordion`}>
                 <div class="d-flex align-items-center justify-content-between">
                   <p class="accordion-header d-flex align-items-center">
                     <i class='bx bx-user-pin'></i>
@@ -100,11 +87,10 @@ function ClientForm(props) {
                     <button className="btn btn-sm btn-outline-primary ml-16" type="button" onClick={() => props.dispatch(clientEditing(client.id ? client.id : "new"))}>
                       {client.id ? "Update Client" : "Add Client" }
                     </button>
-                    {/* <i class={`bx fs-24 ${!activeSections.client ? "bx-chevron-right" : "bx-chevron-down"}`} onClick={()=> setActiveSections({...activeSections, client: !activeSections.client})}></i> */}
                   </div>
                 </div>
               </button>
-              <div class={`panel ${activeSections.client && "active"}`}>
+              <div class={`panel active`}>
                 <div>
                   <InputField
                     label="Client Name"
@@ -173,16 +159,19 @@ function ClientForm(props) {
       </Formik>
 
       <ClientFormModal clientFormSubmit={clientFormSubmit}/>
+
     </Fragment>
 	);
 }
 
 function mapStateToProps(state) {
-  const { client, filters } = state;
+  const { client, invoice, auth, filters } = state;
   return {
     clients: client.clients,
     client: client.client,
-    filters
+    currentUser: auth.user,
+    filters,
+    invoiceEditing: invoice.editing
   };
 }
 

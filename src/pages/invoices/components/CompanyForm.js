@@ -1,21 +1,20 @@
 import React, { Fragment } from 'react';
-import {NavLink} from 'react-router-dom';
 import { connect } from "react-redux";
-import {useRef, useState, useEffect} from "react"
-import { Formik, Form, FieldArray } from 'formik';
+import { useEffect } from "react"
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
 import { InputField, SelectField } from '../../../components/form';
 import countries from "../../../utils/countries";
-import { retrieveCompanies, getCompany, createCompany, updateCompany, companyEditing } from '../../../redux/actions/companyActions';
+import { getCompany, createCompany, updateCompany, companyEditing } from '../../../redux/actions/companyActions';
 import CompanyFormModal from '../../company/CompanyFormModal';
 import FileUpload from '../../../components/form/FileUpload';
 
 function CompanyForm(props) {
-  const { globalFormValues, setGlobalFormValues, invoiceRef, activeSections, setActiveSections, company, currentUser} = props
+  const { globalFormValues, setGlobalFormValues, company, currentUser, invoiceEditing} = props
   
   useEffect(()=>{
-    currentUser.companies.length > 0 && props.dispatch(getCompany(currentUser.companies[0].id, {registerKey: currentUser.registerKey, include: ["address"]}));
+    !invoiceEditing && currentUser.companies.length > 0 && props.dispatch(getCompany(currentUser.companies[0].id, {registerKey: currentUser.registerKey, include: ["address"]}));
   },[])
 
   const companyFormSubmit = async (data) => {
@@ -50,7 +49,6 @@ function CompanyForm(props) {
   return (
     <Fragment>
       <Formik
-        innerRef={invoiceRef}
         enableReinitialize
         initialValues={{
           ...initialValues
@@ -65,21 +63,14 @@ function CompanyForm(props) {
           phone: Yup.string()
             .required('Required'),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          props.dispatch(createCompany(values))
-          // setTimeout(() => {
-          //   alert(JSON.stringify(values, null, 2));
-          //   setSubmitting(false);
-          // }, 400);
-        }}>
+      >
 
         {({values}) => {
           values != globalFormValues.company && setGlobalFormValues({...globalFormValues, company: values})
           const states = values.address && values.address.country && countries.find(item => values.address.country === item.name).states;
           return (
             <Form>
-              {/* Invoice sections Client */}
-              <button type="button" class={`accordion ${!activeSections.company && "mb-16"}`}>
+              <button type="button" class={`accordion`}>
                 <div class="d-flex align-items-center justify-content-between">
                   <p class="accordion-header d-flex align-items-center">
                     <i class='bx bx-calendar-edit'></i>
@@ -99,11 +90,10 @@ function CompanyForm(props) {
                         Create New
                       </button>
                     }
-                    {/* <i class={`bx fs-24 ${!activeSections.company ? "bx-chevron-right" : "bx-chevron-down"}`} onClick={()=> setActiveSections({...activeSections, company: !activeSections.company})}></i> */}
                   </div>
                 </div>
               </button>
-              <div class={`panel ${activeSections.company && "active"}`}>
+              <div class={`panel active`}>
                 <div class="pt-16">
                   <div class="d-flex">
                     <div class="d-flex flex-column w-50 pr-16">
@@ -132,10 +122,15 @@ function CompanyForm(props) {
                         disabled
                       />
                     </div>
-                    <div class="w-50 pl-16 form-group d-flex flex-column">
-                      <FileUpload key={values.logo} label="Logo" value={values.logo} onlyPlaceholder disabled/>
-                      {/* <img class="uploaded-file"  style={{maxHeight: "120px"}} src={company.logo} /> */}
-                    </div>
+                    
+                    <FileUpload
+                      key={values.logo}
+                      label="Logo"
+                      value={values.logo}
+                      onlyPlaceholder
+                      disabled
+                      wrapperClass="w-50 pl-16 form-group d-flex flex-column"
+                    />
                   </div>
 
                   <div class="d-flex w-100">

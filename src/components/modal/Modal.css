@@ -336,6 +336,7 @@ button.close {
 
   .welcome-modal .modal-content {
     background-color: #f9fafe;
+    padding-bottom: 1rem;
 
   }
   .welcome-modal .close {
@@ -351,7 +352,9 @@ button.close {
     right: 10px;
   }
   .welcome-modal .modal-body {
-    padding: 32px;
+    padding: 1rem 2rem 2rem;
+    max-height: 500px;
+    overflow-y: scroll;
   }
 
   .welcome-modal .illustration {

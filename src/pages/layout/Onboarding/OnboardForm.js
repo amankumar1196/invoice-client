@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 
 import { InputField, SelectField, CheckboxField } from '../../../components/form';
 import countries from "../../../utils/countries";
+import FileUpload from '../../../components/form/FileUpload';
 
 function CompanyForm(props) {
   const { currentUser, handleSubmit } = props
@@ -65,7 +66,7 @@ function CompanyForm(props) {
         }, 3000);
       }}>
 
-      {({values, isSubmitting}) => {
+      {({values, isSubmitting, setFieldValue}) => {
         const states = values.address.country && countries.find(item => values.address.country === item.name).states;
 
         return (
@@ -90,21 +91,29 @@ function CompanyForm(props) {
                 type="text"
                 placeholder=""
               />
-              <div class="d-flex w-100">
-                <InputField
-                  label="Email Address"
-                  name="email"
-                  type="email"
-                  placeholder=""
-                  wrapperClass="form-group w-100 pr-16"
-                />
+              <div class="d-flex">
+                <div class="d-flex flex-column w-50 pr-16">
+                  <InputField
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    placeholder=""
+                    wrapperClass="form-group w-100"
+                  />
 
-                <InputField
-                  label="Phone"
-                  name="phone"
-                  type="number"
-                  placeholder=""
-                  wrapperClass="form-group w-100 pl-16"
+                  <InputField
+                    label="Phone"
+                    name="phone"
+                    type="number"
+                    placeholder=""
+                    wrapperClass="form-group w-100"
+                  />
+                </div>
+
+                <FileUpload
+                  label="Upload Logo"
+                  wrapperClass="w-50 pl-16 mb-16"
+                  onUploadHook={(val) => setFieldValue("logo", val)}
                 />
               </div>
 

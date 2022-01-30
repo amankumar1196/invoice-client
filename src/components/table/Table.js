@@ -8,9 +8,9 @@ function Table(props) {
     return <thead>
       <tr>
         { columns.map(col => (
-          <th onClick={() => col.onClickColumnHook({...filters, sortBy: col.value, sortDirection: filters.sortDirection == "DESC" ? "ASC" : "DESC"})}>
-            {col.name} 
-            { filters.sortBy === col.value ? 
+          <th width={col.width} onClick={() => col.onClickColumnHook({...filters, sortBy: col.value, sortModal: col.modal, sortDirection: filters.sortDirection == "DESC" ? "ASC" : "DESC"})}>
+            {col.render ? col.render() : col.name}
+            { filters.sortBy === col.value ?
               filters.sortDirection == "DESC" ?
                 <i class='bx bxs-down-arrow'></i>
                 :

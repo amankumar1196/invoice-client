@@ -28,7 +28,7 @@ function Clients(props) {
 		if(id !== "new")
 			props.dispatch(getClient(id));
 		props.dispatch(clientEditing(id));
-	}	
+	}
 
 	const clientFormSubmit = (data) => {
     const id = data.id || '';

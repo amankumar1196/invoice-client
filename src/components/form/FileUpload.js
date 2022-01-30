@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { setToastr } from '../../redux/actions/ToastrMessageActions';
 import "./form.css";
 
 const FileUpload = (props) => {
-  const { label, onUploadHook, value, onlyPlaceholder, disabled } = props;
+  const { label, onUploadHook, value, onlyPlaceholder, disabled, wrapperClass, isStandalone } = props;
 
 	const [isDrop, setDropState] = useState(false)
 	const [file, setFile] = useState(null)
+	const [isUploaded, setUpload] = useState(false)
 	const inputRef = useRef(null);
 
 	useEffect(() => {
@@ -23,13 +26,14 @@ const FileUpload = (props) => {
 
   const setAndValidateFile = (file) => {
 		var validExtensions = ["image/jpeg", "image/jpg", "image/png"];
-		if(!validExtensions.some(i=> file.type === i)) {
-			return alert("Wrong format upload")
+		if(!validExtensions.some(i => file.type === i)) {
+			return props.dispatch(setToastr(`${file.type.split('/')[1]} format not supported`, "danger"));
 		} else {
 			let fileReader = new FileReader();
 			fileReader.onload = () => {
 				let fileUrl = fileReader.result;
 				setFile(fileUrl)
+        !isStandalone && onUploadHook && onUploadHook(fileUrl);
 			}
 			fileReader.readAsDataURL(file);
 		}
@@ -49,11 +53,12 @@ const FileUpload = (props) => {
 
 	const handleUpload = () => {
     onUploadHook && onUploadHook(file);
+    setUpload(true);
   }
   
   return (
-    <div class={"mb-32"}>
-      {label && <lable class="form-group">{label}</lable> }
+    <div class={wrapperClass ? wrapperClass : "mb-32"}>
+      {label && <label class="form-group">{label}</label> }
       {!file ? 
         <div 
           class={`drag-area ${isDrop && !disabled ? "active" : ""}`} 
@@ -77,16 +82,20 @@ const FileUpload = (props) => {
           }
         </div>
         :
-        <div class="drag-area">
-          <img class={`uploaded-file pt-24 pl-16 pr-16 ${onlyPlaceholder && "pb-16 "}`} src={file} />
-          { !onlyPlaceholder && <div class="d-flex align-items-center pt-24 pb-16">
-            <button class="btn btn-sm btn-outline-danger d-flex align-items-center mr-8" type='button' onClick={()=> setFile(null)}><i class='bx bx-x-circle mr-8 fs-24'></i> Cancel</button>
-            <button class="btn btn-sm btn-outline-primary d-flex align-items-center ml-8" type='button' onClick={()=> handleUpload()}><i class='bx bx-cloud-upload mr-8 fs-24'></i> Upload</button>
-          </div> }
+        <div class="drag-area p-16">
+          <img class={`uploaded-file ${onlyPlaceholder && "pb-16 "}`} src={file} />
+          { !onlyPlaceholder && !isUploaded && isStandalone ? 
+              <div class="d-flex align-items-center pt-24 pb-16">
+                <button class="btn btn-sm btn-outline-danger d-flex align-items-center mr-8" type='button' onClick={()=> setFile(null)}><i class='bx bx-x-circle mr-8 fs-20'></i> Cancel</button>
+                <button class="btn btn-sm btn-outline-primary d-flex align-items-center ml-8" type='button' onClick={()=> handleUpload()}><i class='bx bx-cloud-upload mr-8 fs-20'></i> Upload</button>
+              </div>
+              :
+              !disabled && <button class="btn btn-sm btn-link d-flex align-items-center remove-close" type='button' onClick={()=> { setUpload(false); setFile(null)}}><i class='bx bx-x-circle fs-20'></i></button>
+          }
         </div>
         }
     </div>
   );
 };
 
-export default FileUpload;
+export default connect()(FileUpload);

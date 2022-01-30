@@ -51,6 +51,7 @@ export const getClient = (id, filters) => async (dispatch) => {
       type: GET_CLIENT,
       payload: res.data,
     });
+    return Promise.resolve(res.data);
   } catch (err) {
     dispatch(setToastr(err.response.data, 'danger'));
     console.log(err);

@@ -1,14 +1,18 @@
 import {
   CREATE_INVOICE,
   RETRIEVE_INVOICES,
+  GET_INVOICE,
   UPDATE_INVOICE,
   DELETE_INVOICE,
   DELETE_ALL_INVOICES,
+  SET_INVOICE_EDITING
 } from "../actions/types";
 
 const initialState = {
   invoices: [],
-  invoice: {}
+  invoice: {},
+  pagination: {},
+  editing: false
 };
 
 function invoiceReducer(state = initialState, action) {
@@ -19,10 +23,20 @@ function invoiceReducer(state = initialState, action) {
       return {...state, payload};
 
     case RETRIEVE_INVOICES:
-      return {...state, invoices: payload};
+      return { 
+        ...state,
+        invoices: payload.data,
+        pagination: payload.pagination,
+        editing: false
+      };
+      
+    case GET_INVOICE:
+      return {...state, invoice: payload};
 
     case UPDATE_INVOICE:
-      return state.map((invoice) => {
+      return {
+        ...state,
+        invoices: state.invoices.map((invoice) => {
         if (invoice.id === payload.id) {
           return {
             ...invoice,
@@ -31,13 +45,22 @@ function invoiceReducer(state = initialState, action) {
         } else {
           return invoice;
         }
-      });
-
+      }),
+      editing: false
+    }
+    
     case DELETE_INVOICE:
       return state.filter(({ id }) => id !== payload.id);
 
     case DELETE_ALL_INVOICES:
       return [];
+
+    case SET_INVOICE_EDITING:
+      return {
+        ...state,
+        invoice: !payload.id || payload.id == "new" ? {} : state.invoice,
+        editing: payload.id
+      };
 
     default:
       return state;

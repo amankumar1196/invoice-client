@@ -1,32 +1,39 @@
-import React from 'react';
-import {NavLink} from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { connect } from "react-redux";
-import {useRef, useState, useEffect} from "react"
 import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
 
 import { InputField } from '../../../components/form';
-import { retrieveInvoices } from '../../../redux/actions/invoiceActions';
+import { invoiceEditing } from '../../../redux/actions/invoiceActions';
 
 function InvoiceItemForm(props) {
-  const { globalFormValues, setGlobalFormValues, invoiceRef, currentUser } = props
+  const { globalFormValues, setGlobalFormValues, currentUser, invoice, dispatch } = props
 
-  useEffect(() => {
-    console.log(globalFormValues);
-  })
+  useEffect(()=>{
+    return () => dispatch(invoiceEditing(false));
+  },[])
+
+
+  let initialValues = null;
+  if(invoice && invoice.id){
+    initialValues = {
+      ...invoice,
+      invoiceItems: invoice.invoice_items
+    }
+  } else initialValues = {
+    name: "",
+    invoiceItems: [{description: "", quantity: 0, price: 0}],
+    userId: currentUser.id,
+    registerKey: currentUser.registerKey
+  }
 
   return (
     <Formik
-      innerRef={invoiceRef}
+      enableReinitialize
       initialValues={{
-        name: "",
-        date: new Date(),
-        invoiceItems: [{description: "", quantity: 0, price: 0}],
-        userId: currentUser.id,
-        registerKey: currentUser.registerKey
+        ...initialValues
       }}
       validationSchema={
-        // props.setU(new Date()),
         Yup.object({
         name: Yup.string()
           .required('Required'),
@@ -39,20 +46,13 @@ function InvoiceItemForm(props) {
         password: Yup.string()
           .required('Required')
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        // props.dispatch(retrieveInvoices())
-        // setTimeout(() => {
-        //   alert(JSON.stringify(values, null, 2));
-        //   setSubmitting(false);
-        // }, 400);
-      }}>
+    >
 
       {({values}) => {
         values != globalFormValues.invoiceItems && setGlobalFormValues({...globalFormValues, invoiceItems: values})
         
         return (
           <Form>
-            {/* Invoice sections Data Details */}
             <FieldArray
               name="invoiceItems"
               render={({ insert, remove, push }) => (
@@ -71,12 +71,10 @@ function InvoiceItemForm(props) {
                   type="text"
                   placeholder="Invoice name"
                 />
-                {values.invoiceItems.map((invoice, index) => (
+                { values.invoiceItems.map((invoice, index) => (
                   <div key={index}>
                     <label className="d-flex justify-content-center fs-12">Invoice Item {index+1}</label>
-                    {/** both these conventions do the same */}
                     <div className="d-flex mb-16" key={index}>
-
                       <div className="w-100">
                         <InputField
                           label="Description"
@@ -119,4 +117,12 @@ function InvoiceItemForm(props) {
 	);
 }
 
-export default InvoiceItemForm;
+function mapStateToProps(state) {
+  const { invoice, auth } = state;
+  return {
+    invoice: invoice.invoice,
+    currentUser: auth.user
+  };
+}
+
+export default connect(mapStateToProps)(InvoiceItemForm);

@@ -31,6 +31,7 @@ const App = (props) => {
               <Route path="/" element={<Layout />}>
                 <Route path="invoices" element={<Invoices />} />
                 <Route path="invoices/new" element={<CreateInvoice />} />
+                <Route path="invoices/:id" element={<CreateInvoice />} />
                 <Route path="clients" element={<Clients />} />
                 <Route path="/" element={<Dashboard />} />
               </Route>,

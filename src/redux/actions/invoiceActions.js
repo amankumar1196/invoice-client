@@ -4,9 +4,12 @@ import { setToastr } from "./ToastrMessageActions";
 import {
   CREATE_INVOICE,
   RETRIEVE_INVOICES,
+  GET_INVOICE,
   UPDATE_INVOICE,
   DELETE_INVOICE,
-  DELETE_ALL_INVOICES
+  DELETE_ALL_INVOICES,
+  RETRIEVE_INVOICES_IDS,
+  SET_INVOICE_EDITING
 } from "./types";
 
 
@@ -40,17 +43,34 @@ export const retrieveInvoices = (filters) => async (dispatch) => {
   }
 };
 
-export const updateInvoice = (id, data) => async (dispatch) => {
+export const getInvoice = (id, filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.put(`/tutorials/${id}`, data);
+    const res = await apiHandler("GET", `/v1/invoices/${id}`, filters);
+
+    dispatch({
+      type: GET_INVOICE,
+      payload: res.data,
+    });
+    return Promise.resolve(res.data);
+  } catch (err) {
+    dispatch(setToastr(err.response.data, 'danger'));
+    console.log(err);
+  }
+};
+
+export const updateInvoice = (data, filters) => async (dispatch) => {
+  try {
+    const res = await apiHandler("put", `/v1/invoices/${data.id}`, filters, data);
 
     dispatch({
       type: UPDATE_INVOICE,
-      payload: data,
+      payload: res.data,
     });
 
+    dispatch(setToastr("Invoice Updated Successfully", "success"))
     return Promise.resolve(res.data);
   } catch (err) {
+    dispatch(setToastr(err.response.message, "danger"))
     return Promise.reject(err);
   }
 };
@@ -86,15 +106,29 @@ export const deleteAllInvoices = () => async (dispatch) => {
   }
 };
 
-export const findInvoicesByTitle = (title) => async (dispatch) => {
+export const getAllInvoicesIds = (filters) => async (dispatch) => {
   try {
-    const res = await apiHandler.get(`/tutorials?title=${title}`);
-
+    const res = await apiHandler("GET", "/v1/invoices/ids", filters);
+    
     dispatch({
-      type: RETRIEVE_INVOICES,
+      type: RETRIEVE_INVOICES_IDS,
       payload: res.data,
     });
+
+    return Promise.resolve(res.data);
   } catch (err) {
+    console.log(err);
+  }
+};
+
+export const invoiceEditing = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SET_INVOICE_EDITING,
+      payload: {id},
+    });
+  } catch (err) {
+    dispatch(setToastr(err.response.data, 'danger'));
     console.log(err);
   }
 };
