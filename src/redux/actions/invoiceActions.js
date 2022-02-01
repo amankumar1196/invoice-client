@@ -39,6 +39,7 @@ export const retrieveInvoices = (filters) => async (dispatch) => {
       payload: res.data,
     });    
   } catch (err) {
+    dispatch(setToastr(err.message, "danger"))
     console.log(err);
   }
 };

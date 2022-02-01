@@ -89,7 +89,7 @@ function ArchivedInvoices(props) {
 						}
 					},
 					{name: "Date", value: "createdAt", onClickColumnHook: (val) => getInvoices(val)},
-					{name: "Last modified", value: "updatedAt", onClickColumnHook: (val) => getInvoices(val)},
+					{name: "Archived On", value: "updatedAt", onClickColumnHook: (val) => getInvoices(val)},
 					{name: "Actions"}
 				]}
 			>
@@ -114,7 +114,7 @@ function ArchivedInvoices(props) {
               <p class={`status ${getStatusClass(invoice.status)}`}>{startCase(invoice.status)}</p>
             </td>
             <td>{moment(invoice.createdAt).format('hh:mm MM.DD.YYYY')}</td>
-            <td>{moment(invoice.updatedAt).startOf('second').fromNow()}</td>
+            <td>{moment(invoice.updatedAt).format('hh:mm MM.DD.YYYY')}</td>
             <td>
               <div class="dropdown">
                 <span>

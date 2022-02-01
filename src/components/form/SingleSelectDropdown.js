@@ -21,13 +21,13 @@ class DropDownListItem extends React.Component {
     );
   }
   toggleChangeListItem = () => {
-    const { listData, uniqueKey, requiredSelected } = this.props;
-    this.props.toggleChangeListItem(listData[uniqueKey]);
+    const { listData, uniqueKey } = this.props;
+    this.props.selectListItem(listData[uniqueKey]);
   };
   onKeyUp = e => {
     if (e.keyCode === 13) {
       const { listData, uniqueKey } = this.props;
-      this.props.toggleChangeListItem(listData[uniqueKey]);
+      this.props.selectListItem(listData[uniqueKey]);
     }
   };
   render() {
@@ -36,7 +36,7 @@ class DropDownListItem extends React.Component {
     return (
       <div
         tabIndex={0}
-        className="drop-down__list-item"
+        className={`drop-down__list-item d-flex align-items-center justify-content-between ${isChecked && "active"}`}
         onClick={this.debouncedToggleChangeListItem}
         onKeyUp={this.onKeyUp}
       >
@@ -46,17 +46,19 @@ class DropDownListItem extends React.Component {
           type="checkbox"
           checked={isChecked}
           value={listData.value}
+          className="d-none"
         />
-        <label htmlFor={id}>{listData.label}</label>
+        <label className="pl-8" htmlFor={id}>{listData.label}</label>
+        { isChecked && <i className="bx bx-check fs-20 color-primary"></i> }
       </div>
     );
   }
 }
 
 
-const MultiSelectDropdown = (props) => {
-  const { uniqueKey, data, defaultSelectedValues, shouldHaveSelectAll, showContent, customRenderDropDownIcon, onChangeHook, requiredSelected, title } = props;
-  const [ selected, setSelected ] = useState(defaultSelectedValues ? defaultSelectedValues : []);
+const SingleSelectDropdown = (props) => {
+  const { uniqueKey, placeholder, data, defaultSelectedValue, showContent, customRenderDropDownIcon, onChangeHook, requiredSelected, title } = props;
+  const [ selected, setSelected ] = useState(defaultSelectedValue ? defaultSelectedValue : null);
   const [ isOpen, setIsOpen ] = useState(false);
   
   const wrapper = useRef(null);
@@ -82,32 +84,9 @@ const MultiSelectDropdown = (props) => {
     };
   });
 
-  const toggleChangeListItem = val => {
-    if (val === "ALL") {
-      if (selected.length === data.length) {
-        setSelected([]);
-        onChangeHook && onChangeHook([]);
-
-      } else {
-        const allUniqueKeys = data.map(
-          item => item[uniqueKey]
-        );
-        setSelected(allUniqueKeys);
-        onChangeHook && onChangeHook(allUniqueKeys);
-      }
-    } else {
-      let updatedSelected = [...selected];
-      if(!requiredSelected || updatedSelected.length > 1 || updatedSelected[0] !== val){ 
-        if (updatedSelected.indexOf(val) > -1) {
-          updatedSelected.splice(updatedSelected.indexOf(val), 1);
-        } else {
-          updatedSelected.push(val);
-        }
-        setSelected(updatedSelected);
-        onChangeHook && onChangeHook(updatedSelected);
-      }
-    }
-
+  const selectListItem = val => {
+    setSelected(val);
+    onChangeHook && onChangeHook(val);
   };
 
   const renderDropDownIcon = () => {
@@ -120,17 +99,10 @@ const MultiSelectDropdown = (props) => {
 
   const renderSelected = () => {
     let labelContent = "";
-    if (!selected.length) {
-      labelContent = "None Selected";
-    } else if (selected.length === data.length) {
-      labelContent = "All Selected";
-    } else if (selected.length === 1) {
-      const selectedOne = data.find(item => item[uniqueKey] === selected[0]);
-      labelContent = selectedOne.label;
-    } else {
-      labelContent = `${selected.length} Selected`;
-    }
-    const activeClass = isOpen ? "multiselect-drop-down--is-open" : "";
+    if (selected) {
+      labelContent = selected;
+    } else labelContent = placeholder
+    const activeClass = isOpen ? "single-select-drop-down--is-open" : "";
     
     return (
       <button
@@ -146,20 +118,12 @@ const MultiSelectDropdown = (props) => {
   const renderDropDownList = () => {
     let data_ = [...data];
 
-    if (shouldHaveSelectAll) {
-      data_ = [{ label: "All", value: "ALL" }, ...data];
-    }
-
     const getIsChecked = ({ listData, uniqueKey, selected }) => {
       let isChecked = false;
-      if (listData[uniqueKey] === "ALL") {
-        if (selected.length === data.length) {
-          isChecked = true;
-        } else {
-          isChecked = false;
-        }
+      if (listData[uniqueKey] === selected) {
+        isChecked = true;
       } else {
-        isChecked = selected.indexOf(listData[uniqueKey]) > -1;
+        isChecked = false;
       }
       return isChecked;
     };
@@ -169,7 +133,7 @@ const MultiSelectDropdown = (props) => {
       return (
         <DropDownListItem
           key={index}
-          toggleChangeListItem={toggleChangeListItem}
+          selectListItem={selectListItem}
           listData={listData}
           uniqueKey={uniqueKey}
           isChecked={isChecked}
@@ -179,11 +143,11 @@ const MultiSelectDropdown = (props) => {
   };
 
   return (
-    <div className="multiselect-drop-down">
+    <div className="single-select-drop-down">
       {renderSelected()}
       {isOpen && (
-        <div className="multiselect-drop-down__list-wrapper" ref={wrapper}>
-          {title && <label className="multiselect-dropdown-title">{title}</label>}
+        <div className="single-select-drop-down__list-wrapper" ref={wrapper}>
+          {title && <label className="single-select-dropdown-title">{title}</label>}
           {renderDropDownList()}
         </div>
       )}
@@ -191,16 +155,4 @@ const MultiSelectDropdown = (props) => {
   );
 }
 
-/**********************************/
-// propTypes
-/**********************************/
-// NewDropDown.propTypes = {
-//     shouldHaveSelectAll: PropTypes.bool,
-//     selected: PropTypes.array,
-//     data: PropTypes.array,
-//     uniqueKey: PropTypes.string,
-//     toggleChangeListItem: PropTypes.func,
-//     customRenderDropDownIcon: () => null
-// };
-
-export default MultiSelectDropdown;
+export default SingleSelectDropdown;

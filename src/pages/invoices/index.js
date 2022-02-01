@@ -9,9 +9,10 @@ import Search from "../../components/search/Search";
 import Pagination from "../../components/pagination/Pagination";
 import { clearFilter, setFilter } from "../../redux/actions/filterActions";
 import Table from "../../components/table/Table";
-import {MultiSelectDropdown} from "../../components/form";
+import { MultiSelectDropdown, SingleSelectDropdown} from "../../components/form";
 import { getClient } from "../../redux/actions/clientActions";
 import { getCompany } from "../../redux/actions/companyActions";
+import ActionBox from "../../components/actionBox/ActionBox";
 
 function Invoices(props) {
 	const { currentUser, filters, pagination, invoices } = props;
@@ -52,7 +53,7 @@ function Invoices(props) {
 
 	const setAllInvoicesIds = async (checked) => {
 		if(checked) {
-			const allInvoiceIds = await props.dispatch(getAllInvoicesIds({...filters, sortBy:"id", sortDirection: "ASC", rpp: 99999999}))
+			const allInvoiceIds = await props.dispatch(getAllInvoicesIds({...filters, sortBy:"id", sortDirection: "ASC", page:1, rpp: 99999999}))
 			setInvoiceIds([...allInvoiceIds])
 		} else {
 			setInvoiceIds([])
@@ -91,26 +92,104 @@ function Invoices(props) {
 				columns={[
 					{ name: "All",
 						render: () => {
-							return ( <label class="checkbox-container">
-								<input type="checkbox" checked={pagination.totalRecords === invoiceIds.length} onClick={(e) => setAllInvoicesIds(e.target.checked)}/>All
-								<span class="checkmark"></span>
-							</label> )
+							return ( 
+								<div className="d-flex align-items-start">
+									<label class="checkbox-container">
+										<input type="checkbox" checked={pagination.totalRecords === invoiceIds.length} onClick={(e) => setAllInvoicesIds(e.target.checked)}/>All
+										<span class={`${pagination.totalRecords === invoiceIds.length ? "checkmark" : "not-all-checkmark"}`}></span>
+									</label>
+									{ invoiceIds.length > 0 && 
+										<ActionBox
+											viewIcon="chevron-down"
+											position="right"
+											iconStyle="fs-20 color-dark"
+											items={[
+												{ name: "Bulk Actions"},
+												{ name: "Send", icon: "mail-send", onClickAction: () => {} },
+												{ name: "Download", icon: "download", onClickAction: () => {} },
+												{ name: "Archive", icon: "archive", onClickAction: () => onInvoiceDelete() }
+											]}
+										/>
+									}
+								</div>
+							)
 						}
 					},
-					{name: "Name", value: "name", onClickColumnHook: (val) => getInvoices(val)},
-					{name: "Price", value: "price", onClickColumnHook: (val) => getInvoices(val)},
-					{name: "Client", value: "name", modal: "client", onClickColumnHook: (val) => getInvoices(val)},
-					{ name: "Status",
-						width: "100px",
-						render: () => {
-							return ( <label class="d-flex align-items-center">
-								Status
-								<MultiSelectDropdown />
-							</label> )
+					{name: "Name", value: "name", allowSorting: true, onClickColumnHook: (val) => getInvoices(val)},
+					// {name: "Price", value: "price", onClickColumnHook: (val) => getInvoices(val)},
+					{name: "Client", value: "client.name", modal: "client", allowSorting: true, onClickColumnHook: (val) => getInvoices(val)},
+					{ name: "Status", style: "d-flex justify-content-between align-items-center",
+						filterMethod: () => {
+							return ( <MultiSelectDropdown
+									title="Status"
+									uniqueKey="value"
+									defaultSelectedValues={["pending","send","not_send"]}
+									requiredSelected
+      						showContent={false}
+									onChangeHook={(val) => getInvoices({...filters, extraParams: { ...filters.extraParams, status: val}})}
+									customRenderDropDownIcon={() => <i class="bx bx-slider fw-6 fs-16"></i>}
+									data={[
+										{
+											label: "Pending",
+											value: "pending"
+										},
+										{
+											label: "Send",
+											value: "send"
+										},
+										{
+											label: "Not Send",
+											value: "not_send"
+										}
+									]}
+								/>
+							)
 						}
 					},
-					{name: "Date", value: "createdAt", onClickColumnHook: (val) => getInvoices(val)},
-					{name: "Last modified", value: "updatedAt", onClickColumnHook: (val) => getInvoices(val)},
+					{name: "Date", value: "createdAt", allowSorting: true, onClickColumnHook: (val) => getInvoices(val), style: "d-flex justify-content-between align-items-center",
+						filterMethod: () => {
+							return ( <SingleSelectDropdown
+									title="Time Period"
+									uniqueKey="value"
+									defaultSelectedValue="0"
+									showContent={false}
+									onChangeHook={(val) => getInvoices({...filters, extraParams: { ...filters.extraParams, createdAt: val}})}
+									customRenderDropDownIcon={() => <i class="bx bx-slider fw-6 fs-16"></i>}
+									data={[
+										{
+											label: "All Time",
+											value: "0"
+										},
+										{
+											label: "Today",
+											value: "1"
+										},
+										{
+											label: "Past 7 days",
+											value: "2"
+										},
+										{
+											label: "This month",
+											value: "3"
+										},
+										{
+											label: "Last month",
+											value: "4"
+										},
+										{
+											label: "Last 12 month",
+											value: "5"
+										},
+										{
+											label: "Custom",
+											value: "6"
+										}
+									]}
+								/>
+							)
+						}
+					},
+					{name: "Last modified", value: "updatedAt", allowSorting: true, onClickColumnHook: (val) => getInvoices(val)},
 					{name: "Actions"}
 				]}
 			>
@@ -130,7 +209,7 @@ function Invoices(props) {
 								<p class="invoice-name truncate">{invoice.name}</p>
 								<span class="invoice-number">Invoice no. {invoice.id}</span>
 							</td>
-							<td>$100.00</td>
+							{/* <td>$100.00</td> */}
 							<td>{invoice.client && invoice.client.name}</td>
 							<td>
 								<p class={`status ${getStatusClass(invoice.status)}`}>{startCase(invoice.status)}</p>
@@ -138,7 +217,17 @@ function Invoices(props) {
 							<td>{moment(invoice.createdAt).format('hh:mm MM.DD.YYYY')}</td>
 							<td>{moment(invoice.updatedAt).startOf('second').fromNow()}</td>
 							<td>
-								<div class="dropdown">
+								<ActionBox
+									viewIcon="dots-horizontal-rounded"
+									iconStyle="action-icon"
+									items={[
+										{ name: "Edit", icon: "edit", onClickAction: () => clientFormEdit(invoice.id) },
+										{ name: "Re Send", icon: "mail-send", onClickAction: () => {} },
+										{ name: "Download", icon: "download", onClickAction: () => {} },
+										{ name: "Archive", icon: "archive", onClickAction: () => onInvoiceDelete({ id: invoice.id, archived: true }) }
+									]}
+								/>
+								{/* <div class="dropdown">
 									<span>
 										<i class='bx bx-dots-horizontal-rounded action-icon'></i>
 									</span>
@@ -148,12 +237,18 @@ function Invoices(props) {
 										<a><i class='bx bx-download'></i>Download</a>
 										<a onClick={() => onInvoiceDelete({ id: invoice.id, archived: true })}><i class='bx bx-archive'></i>Archive</a>
 									</div>
-								</div>
+								</div> */}
 							</td>
 						</tr>
 				)}
 			</Table>
-			<Pagination filters={filters} pagination={pagination} currentTotalRecords={invoices.length} filterHook={(filters) => getInvoices(filters)} />
+			<Pagination
+				filters={filters}
+				pagination={pagination}
+				currentTotalRecords={invoices.length}
+				filterHook={(filters) => getInvoices(filters)}
+				infoTextDisplay={invoiceIds.length > 0 ? () => <span className="color-grey-light fs-14">No. of Invoices Selected: {invoiceIds.length.toLocaleString("es-US", { minimumIntegerDigits: 2 })} </span> : null}
+			/>
 		</div>
 	);
 }

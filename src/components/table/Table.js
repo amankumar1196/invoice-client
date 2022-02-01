@@ -8,15 +8,21 @@ function Table(props) {
     return <thead>
       <tr>
         { columns.map(col => (
-          <th width={col.width} onClick={() => col.onClickColumnHook({...filters, sortBy: col.value, sortModal: col.modal, sortDirection: filters.sortDirection == "DESC" ? "ASC" : "DESC"})}>
-            {col.render ? col.render() : col.name}
-            { filters.sortBy === col.value ?
-              filters.sortDirection == "DESC" ?
-                <i class='bx bxs-down-arrow'></i>
-                :
-                <i class='bx bxs-up-arrow' ></i>
+          <th width={col.width} >
+            { col.render ? 
+              col.render()
               :
-              null
+              <div className={col.style}>
+                <div onClick={() => col.onClickColumnHook({...filters, sortBy: col.value, sortModal: col.modal, sortDirection: filters.sortDirection == "DESC" ? "ASC" : "DESC"})}>
+                  {col.name}
+                  {col.allowSorting && filters.sortBy === col.value ?
+                    <i class={`bx bxs-${filters.sortDirection == "DESC" ? "down" : "up"}-arrow`}></i>
+                    :
+                    null
+                  }
+                </div>
+                {col.filterMethod && col.filterMethod()}
+              </div>
             }
           </th>
         ))}

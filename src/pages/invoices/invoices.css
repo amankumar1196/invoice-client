@@ -177,6 +177,16 @@ thead tr{
     border-radius: 4px;
     background-color: #e0eafd;
   }
+
+  .not-all-checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 16px;
+    width: 16px;
+    border-radius: 4px;
+    background-color: #e0eafd;
+  }
   
   /* On mouse-over, add a grey background color */
   /* .checkbox-container:hover input ~ .checkmark {
@@ -187,9 +197,24 @@ thead tr{
   .checkbox-container input:checked ~ .checkmark {
     background-color: #3a67d9;
   }
+
+  .checkbox-container input:checked ~ .not-all-checkmark {
+    background-color: #3a67d9;
+  }
   
   /* Create the checkmark/indicator (hidden when not checked) */
+  .not-all-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
   .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .not-all-checkmark:after {
     content: "";
     position: absolute;
     display: none;
@@ -197,6 +222,9 @@ thead tr{
   
   /* Show the checkmark when checked */
   .checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  .checkbox-container input:checked ~ .not-all-checkmark:after {
     display: block;
   }
   
@@ -213,7 +241,17 @@ thead tr{
     transform: rotate(45deg);
   }
 
-  .dropdown {
+  .checkbox-container .not-all-checkmark:after {
+    left: 6px;
+    top: 3px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 0px 0;
+    transform: rotate(90deg);
+  }
+
+  /* .dropdown {
     position: relative;
     display: inline-block;
   }
@@ -227,7 +265,6 @@ thead tr{
     padding: 0.5rem;
     z-index: 1;
     right: -24px;
-    /* top: 40px; */
     border-radius: 6px;
     border: 0px solid #cacfd5;
   }
@@ -250,7 +287,7 @@ thead tr{
   }
   .dropdown:hover .dropdown-content {
     display: block;
-  }
+  } */
 
   .invoice-name {
     font-weight: 500;

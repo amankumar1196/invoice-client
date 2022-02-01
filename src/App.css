@@ -358,6 +358,9 @@ p {
 .d-block {
   display: block !important;
 }
+.d-none {
+  display: none !important;
+}
 .flex-column {
   flex-direction: column;
 }
@@ -384,6 +387,9 @@ p {
 }
 .fs-12 {
   font-size: 0.75rem;
+}
+.fs-14 {
+  font-size: 0.875rem;
 }
 .fs-16 {
   font-size: 1rem !important;
@@ -417,6 +423,9 @@ p {
 }
 .pr-16 {
   padding-right: 16px;
+}
+.pl-8 {
+  padding-left: 8px;
 }
 .pl-24 {
   padding-left: 24px;
@@ -494,7 +503,9 @@ p {
 .color-success {
   color: #6fb64c;
 }
-
+.color-dark {
+  color: #19181B;
+}
 .border-bottom-0 {
   border-bottom: 0 !important;
 }

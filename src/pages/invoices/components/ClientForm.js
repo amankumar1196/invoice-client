@@ -13,7 +13,7 @@ function ClientForm(props) {
   const { globalFormValues, setGlobalFormValues, clients, client, filters, currentUser, dispatch } = props
 
   useEffect(()=>{
-    dispatch(retrieveClients({...filters, extraParams: { ...filters.extraParams, registerKey: currentUser.registerKey}, include: [ "address" ]}));
+    dispatch(retrieveClients({...filters, extraParams: { registerKey: currentUser.registerKey }, include: [ "address" ]}));
     return () => dispatch(clientEditing(false));
   },[])
 
