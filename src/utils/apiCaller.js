@@ -18,12 +18,16 @@ import qs from "qs";
 
 const API_ROOT = "http://localhost:8080/api"
 
-function apiHandler(method, endpointUrl, params, data = null) {
+function apiHandler(method, endpointUrl, params, data = null, config = null) {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'x-access-token': localStorage.getItem('access-token') || ''
+    'x-access-token': localStorage.getItem('access-token') || '',
   };
+  const apiConfig = {
+    ...config,
+    headers
+  }
   let url = API_ROOT + endpointUrl;
   if(params)
     url = url + '?'+ qs.stringify(params, { arrayFormat: 'brackets' })
@@ -34,12 +38,12 @@ function apiHandler(method, endpointUrl, params, data = null) {
       method,
       url,
       data,
-      headers
+      ...apiConfig
     });
   } else return axios({
     method,
     url,
-    headers
+    ...apiConfig
   });
   
 }

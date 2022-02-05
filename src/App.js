@@ -6,6 +6,7 @@ import Layout from './pages/layout/layout';
 import PublicLayout from './pages/layout/publicLayout';
 import Dashboard from './pages/dashboard'
 import Invoices from './pages/invoices'
+import PDFInvoicePreviewTemplate from './pages/invoices/PDFInvoicePreviewTemplate'
 import CreateInvoice from './pages/invoices/CreateInvoice'
 import Clients from './pages/clients';
 import Archived from './pages/archived';
@@ -37,6 +38,7 @@ const App = (props) => {
                 <Route path="archived" element={<Archived />} />
                 <Route path="/" element={<Dashboard />} />
               </Route>,
+              <Route path="/generate-pdf-invoice" element={<PDFInvoicePreviewTemplate />} />,
               <Route path='*' element={<Navigate to='/' />} /> ]
             }
           </Routes>
@@ -48,6 +50,7 @@ const App = (props) => {
               <Route path="/sign-in" element={<SignInForm />} />
               <Route path="/sign-up" element={<SignUpForm />} />
             </Route>
+            <Route path="/generate-pdf-invoice" element={<PDFInvoicePreviewTemplate />} />
             <Route path='*' element={<Navigate to='/' />} />
           </Routes>
         </>

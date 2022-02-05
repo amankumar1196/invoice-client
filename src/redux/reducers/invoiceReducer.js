@@ -5,14 +5,16 @@ import {
   UPDATE_INVOICE,
   DELETE_INVOICE,
   DELETE_ALL_INVOICES,
-  SET_INVOICE_EDITING
+  SET_INVOICE_EDITING,
+  SET_INVOICE_PREVIEW
 } from "../actions/types";
 
 const initialState = {
   invoices: [],
   invoice: {},
   pagination: {},
-  editing: false
+  editing: false,
+  isShowInvoicePreview: false
 };
 
 function invoiceReducer(state = initialState, action) {
@@ -60,6 +62,12 @@ function invoiceReducer(state = initialState, action) {
         ...state,
         invoice: !payload.id || payload.id == "new" ? {} : state.invoice,
         editing: payload.id
+      };
+
+    case SET_INVOICE_PREVIEW:
+      return {
+        ...state,
+        isShowInvoicePreview: payload.show
       };
 
     default:

@@ -50,6 +50,8 @@ export const getCompany = (id, filters) => async (dispatch) => {
       type: GET_COMPANY,
       payload: res.data,
     });
+    return Promise.resolve(res.data);
+
   } catch (err) {
     dispatch(setToastr(err.response.data, 'danger'));
     console.log(err);

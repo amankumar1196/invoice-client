@@ -71,7 +71,7 @@ function InvoiceItemForm(props) {
                   type="text"
                   placeholder="Invoice name"
                 />
-                { values.invoiceItems.map((invoice, index) => (
+                { values.invoiceItems.map((item, index) => (
                   <div key={index}>
                     <label className="d-flex justify-content-center fs-12">Invoice Item {index+1}</label>
                     <div className="d-flex mb-16" key={index}>

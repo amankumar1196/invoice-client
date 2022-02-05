@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { startCase } from "lodash";
 import moment from "moment";
-import { retrieveInvoices, getAllInvoicesIds, invoiceEditing, getInvoice, deleteInvoice } from "../../redux/actions/invoiceActions";
+import { retrieveInvoices, getAllInvoicesIds, invoiceEditing, getInvoice, deleteInvoice, showInvoicePreview, downloadInvoicePDF } from "../../redux/actions/invoiceActions";
 import Search from "../../components/search/Search";
 import Pagination from "../../components/pagination/Pagination";
 import { clearFilter, setFilter } from "../../redux/actions/filterActions";
@@ -13,10 +13,16 @@ import { MultiSelectDropdown, SingleSelectDropdown} from "../../components/form"
 import { getClient } from "../../redux/actions/clientActions";
 import { getCompany } from "../../redux/actions/companyActions";
 import ActionBox from "../../components/actionBox/ActionBox";
+import InvoiceShow from "./InvoiceShow";
 
 function Invoices(props) {
-	const { currentUser, filters, pagination, invoices } = props;
+	const { currentUser, filters, pagination, invoices, dispatch } = props;
 	const [ invoiceIds, setInvoiceIds ] = useState([]);
+	const [ previewValues, setPreviewValues ] = useState({
+		company: {},
+		client: {},
+		invoiceItems: {}
+	});
 	const history = useNavigate();
 
 	useEffect(()=> {
@@ -38,6 +44,28 @@ function Invoices(props) {
 		await props.dispatch(invoiceEditing(id));
 		history(`/invoices/${id}`)
 	}	
+
+	const invoicePreview = async (id) => {
+		const invoice = await props.dispatch(getInvoice(id, {include: ["invoice_items"]}))
+		const company = await props.dispatch(getCompany(invoice.companyId, {include: ["address"]}))
+		const client = await props.dispatch(getClient(invoice.clientId, {include: ["address"]}))
+
+		setPreviewValues({
+			invoiceItems: {...invoice, invoiceItems: invoice.invoice_items},
+			client,
+			company: company ? company : {}
+		})
+		localStorage.setItem("invoiceValues", JSON.stringify({
+			invoiceItems: {...invoice, invoiceItems: invoice.invoice_items},
+			client,
+			company: company ? company : {}
+		}))
+		props.dispatch(showInvoicePreview(true));
+	}
+	
+	const handleDownloadInvoicePDF = (id) => {
+		dispatch(downloadInvoicePDF(id))
+	}
 
 	const onInvoiceDelete = (data) => {
 		props.dispatch(deleteInvoice(data))
@@ -195,7 +223,7 @@ function Invoices(props) {
 			>
 				{ props.invoices.map(invoice =>
 					!invoice.archived && 
-						<tr key={`invoice-${invoice.id}`}>
+						<tr key={`invoice-${invoice.id}`} className={`${invoiceIds.indexOf(invoice.id) > -1 && "bg-primary-light"}`}>
 							<td>
 								<div class="select-box">
 									<label class="checkbox-container">
@@ -221,9 +249,10 @@ function Invoices(props) {
 									viewIcon="dots-horizontal-rounded"
 									iconStyle="action-icon"
 									items={[
+										{ name: "Preview", icon: "expand", onClickAction: () => invoicePreview(invoice.id) },
 										{ name: "Edit", icon: "edit", onClickAction: () => clientFormEdit(invoice.id) },
 										{ name: "Re Send", icon: "mail-send", onClickAction: () => {} },
-										{ name: "Download", icon: "download", onClickAction: () => {} },
+										{ name: "Download", icon: "download", onClickAction: () => handleDownloadInvoicePDF(invoice.id) },
 										{ name: "Archive", icon: "archive", onClickAction: () => onInvoiceDelete({ id: invoice.id, archived: true }) }
 									]}
 								/>
@@ -249,6 +278,7 @@ function Invoices(props) {
 				filterHook={(filters) => getInvoices(filters)}
 				infoTextDisplay={invoiceIds.length > 0 ? () => <span className="color-grey-light fs-14">No. of Invoices Selected: {invoiceIds.length.toLocaleString("es-US", { minimumIntegerDigits: 2 })} </span> : null}
 			/>
+      <InvoiceShow globalFormValues={previewValues} />
 		</div>
 	);
 }

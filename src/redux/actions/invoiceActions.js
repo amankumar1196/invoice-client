@@ -1,4 +1,6 @@
+import axios from "axios";
 import apiHandler from "../../utils/apiCaller";
+import { downloadFile } from "../../utils/helper";
 import { setToastr } from "./ToastrMessageActions";
 
 import {
@@ -9,7 +11,9 @@ import {
   DELETE_INVOICE,
   DELETE_ALL_INVOICES,
   RETRIEVE_INVOICES_IDS,
-  SET_INVOICE_EDITING
+  SET_INVOICE_EDITING,
+  SET_INVOICE_PREVIEW,
+  GENERATE_PDF
 } from "./types";
 
 
@@ -93,22 +97,6 @@ export const deleteInvoice = (data, filters) => async (dispatch) => {
   }
 };
 
-// export const deleteInvoice = (id) => async (dispatch) => {
-//   try {
-//     const res = await apiHandler.delete(`/tutorials/${id}`);
-
-//     dispatch({
-//       type: DELETE_INVOICE,
-//       payload: { id },
-//     });
-
-//     return Promise.resolve(res.data);
-//   } catch (err) {
-//     console.log(err);
-//     return Promise.reject(err);
-//   }
-// };
-
 export const deleteAllInvoices = () => async (dispatch) => {
   try {
     const res = await apiHandler.delete(`/tutorials`);
@@ -145,6 +133,50 @@ export const invoiceEditing = (id) => async (dispatch) => {
       type: SET_INVOICE_EDITING,
       payload: {id},
     });
+  } catch (err) {
+    dispatch(setToastr(err.response.data, 'danger'));
+    console.log(err);
+  }
+};
+
+export const showInvoicePreview = (val) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SET_INVOICE_PREVIEW,
+      payload: {show: val},
+    });
+  } catch (err) {
+    dispatch(setToastr(err.response.data, 'danger'));
+    console.log(err);
+  }
+};
+
+export const generatePdf = (data, filters) => async (dispatch) => {
+  try {
+    const res = await apiHandler("post", "/v1/invoices/generate-invoice-pdf", filters, {data: {...data}}, data.type !== "view" && { responseType: 'blob' });
+    downloadFile(res, data.type)
+      
+    dispatch({
+      type: GENERATE_PDF,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch(setToastr(err.response.data, 'danger'));
+    console.log(err);
+  }
+};
+
+export const downloadInvoicePDF = (id, filters) => async (dispatch) => {
+  try {
+    dispatch(setToastr(`Downlad will start soon`, "info"))
+    const res = await apiHandler("get", `/v1/invoices/${id}/download-pdf`, filters, null, { responseType: 'blob' });
+    downloadFile(res, "download")
+    
+    // // dispatch({
+    // //   type: DOWNLAOD_PDF,
+    // //   payload: res.data,
+    // // });
+
   } catch (err) {
     dispatch(setToastr(err.response.data, 'danger'));
     console.log(err);

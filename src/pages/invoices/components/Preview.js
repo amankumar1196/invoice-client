@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { setToastr } from '../../../redux/actions/ToastrMessageActions';
+import { generatePdf, showInvoicePreview } from '../../../redux/actions/invoiceActions';
+import InvoiceShow from '../InvoiceShow';
 
 function PreviewInvoice(props) {
-	const { setActiveStep, globalFormValues, invoiceFormSubmit } = props;
+	const { setActiveStep, globalFormValues, invoiceFormSubmit, dispatch } = props;
 
 	const validateInvoiceStepsForm = async () => {
 		let errors = [];
@@ -32,15 +34,15 @@ function PreviewInvoice(props) {
       <div class="preview-header">
         <p>Preview</p>
         <div class="preview-actions">
-          <div class="tooltip">
+          <div class="tooltip" onClick={() => dispatch(showInvoicePreview(true))}>
             <i class='bx bx-fullscreen fs-20 icons'></i>
             <span class="tooltiptext">Full Screen</span>
           </div>
-          <div class="tooltip ml-16 mr-16">
+          <div class="tooltip ml-16 mr-16" onClick={() => dispatch(generatePdf({...globalFormValues, type: "download"}))}>
             <i class='bx bx-book fs-20 icons'></i>
             <span class="tooltiptext">PDF</span>
           </div>
-          <div class="tooltip">
+          <div class="tooltip" onClick={() => dispatch(generatePdf({...globalFormValues, type: "view"}))}>
             <i class='bx bx-printer fs-20 icons'></i>
             <span class="tooltiptext">Print</span>
           </div>
@@ -149,6 +151,7 @@ function PreviewInvoice(props) {
           </div>
         </div>
       </div>
+      <InvoiceShow globalFormValues={globalFormValues} />
     </div>
 	);
 }
